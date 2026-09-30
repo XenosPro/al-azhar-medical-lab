@@ -1,75 +1,99 @@
-# React + TypeScript + Vite
+# Al-Azhar Medical Lab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive website for **Al-Azhar Medical Lab**, designed to present laboratory services, communicate the laboratory's approach, and provide a clear path for patients to get in touch.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Production:** https://al-azhar-medical-lab.vercel.app/
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Modern medical laboratory visual identity
+* Responsive design for desktop, tablet, and mobile
+* Laboratory services section
+* About section
+* Step-by-step testing process
+* Contact call-to-action
+* Custom medical-themed favicon
+* SEO-friendly page metadata
+* Subtle animations and interactive hover states
+* Clean component-based React structure
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **React**
+* **TypeScript**
+* **Vite**
+* **CSS**
+* **Google Fonts**
+* **Vercel** for deployment
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+al-azhar-medical-lab/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── App.tsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.tsx
+├── index.html
+├── package.json
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Clone the repository:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone https://github.com/XenosPro/al-azhar-medical-lab.git
+cd al-azhar-medical-lab
 ```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+## Customization
+
+Before using the website for a real laboratory, replace the placeholder contact information with the laboratory's actual:
+
+* Phone number
+* Address
+* Email address
+* Opening hours
+* Social media links
+* Available laboratory services
+
+The current website intentionally avoids presenting unverified contact details, statistics, certifications, or medical claims.
+
+## Deployment
+
+The project is configured for deployment on Vercel. Production deployments can be triggered automatically from the connected GitHub repository.
+
+## License
+
+This project is a custom website project for Al-Azhar Medical Lab.
