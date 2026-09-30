@@ -1095,27 +1095,39 @@ a {
   color: var(--blue-900);
 }
 
-.contact-placeholder {
+.contact-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(160px, 1fr));
+  gap: 18px 28px;
+}
+
+.contact-detail {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.contact-placeholder small {
+.contact-detail small {
   color: rgba(255, 255, 255, 0.4);
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 1.5px;
 }
 
-.contact-placeholder strong {
+.contact-detail strong {
   color: white;
-  font-size: 15px;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
-.contact-placeholder span {
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 9px;
+a.contact-detail:hover strong {
+  color: var(--cyan);
+}
+
+@media (max-width: 700px) {
+  .contact-details {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- Footer ---------- */
