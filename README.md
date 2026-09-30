@@ -77,18 +77,15 @@ Preview the production build:
 npm run preview
 ```
 
-## Customization
+## Laboratory Contact Information
 
-Before using the website for a real laboratory, replace the placeholder contact information with the laboratory's actual:
+* **Address:** Rue Frères Saadoun, Cherchell, Algeria, 42002
+* **Phone:** 0671 33 33 71
+* **WhatsApp:** +213 671 33 33 71
+* **Email:** labmabizari@gmail.com
+* **Hours:** Always open
 
-* Phone number
-* Address
-* Email address
-* Opening hours
-* Social media links
-* Available laboratory services
-
-The current website intentionally avoids presenting unverified contact details, statistics, certifications, or medical claims.
+The website intentionally avoids presenting unverified statistics, certifications, or medical claims. Additional laboratory services can be updated as the laboratory provides confirmed information.
 
 ## Deployment
 
