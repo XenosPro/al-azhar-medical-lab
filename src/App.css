@@ -328,6 +328,54 @@ a {
 
 /* ---------- Hero visual ---------- */
 
+.hero-photo-card {
+  width: min(470px, 92%);
+  height: 500px;
+  border-radius: 30px;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 27, 46, 0.42) 0%, rgba(7, 27, 46, 0.04) 42%, rgba(7, 27, 46, 0.78) 100%);
+  pointer-events: none;
+}
+
+.hero-photo-caption {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: white;
+}
+
+.hero-photo-caption strong {
+  font-family: 'Manrope', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.hero-photo-caption span {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+
 .hero-visual {
   min-height: 500px;
   position: relative;
