@@ -392,7 +392,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
-        <Route path="/lab-ai" element={<LabAI />} />
+        <Route path="/lab-ai/*" element={<LabAI />} />
       </Routes>
     </BrowserRouter>
   )
