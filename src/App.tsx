@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import LabAI from './pages/LabAI'
 import './App.css'
 
 const services = [
@@ -63,6 +64,7 @@ function Home() {
             <a href="#services">Services</a>
             <a href="#about">About</a>
             <a href="#process">Process</a>
+            <a href="/lab-ai">Lab AI</a>
             <a href="#contact">Contact</a>
           </nav>
 
@@ -390,6 +392,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/lab-ai" element={<LabAI />} />
       </Routes>
     </BrowserRouter>
   )
