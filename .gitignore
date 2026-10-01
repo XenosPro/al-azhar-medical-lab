@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local ML artifacts
+ai-service/model.joblib
+ai-service/.venv/
