@@ -29,6 +29,9 @@ const timeSlots = [
 function BookAppointment() {
   const navigate = useNavigate()
 
+  const [userId, setUserId] = useState<string | null>(null)
+  const [guestName, setGuestName] = useState('')
+  const [guestPhone, setGuestPhone] = useState('')
   const [service, setService] = useState('')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
@@ -42,16 +45,14 @@ function BookAppointment() {
     checkUser()
   }, [])
 
+  // Login is optional: a signed-in patient is linked to the appointment,
+  // anyone else books as a guest.
   async function checkUser() {
     const {
       data: { user },
     } = await supabase.auth.getUser()
 
-    if (!user) {
-      navigate('/login')
-      return
-    }
-
+    setUserId(user?.id ?? null)
     setCheckingUser(false)
   }
 
@@ -66,19 +67,17 @@ function BookAppointment() {
       return
     }
 
-    setLoading(true)
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      navigate('/login')
+    if (!userId && (!guestName.trim() || !guestPhone.trim())) {
+      setError('Please enter your full name and phone number.')
       return
     }
 
+    setLoading(true)
+
     const { error } = await supabase.from('appointments').insert({
-      user_id: user.id,
+      user_id: userId,
+      guest_name: userId ? null : guestName.trim(),
+      guest_phone: userId ? null : guestPhone.trim(),
       service,
       appointment_date: date,
       appointment_time: time,
@@ -93,17 +92,20 @@ function BookAppointment() {
     }
 
     setSuccess(
-      'Your appointment request has been submitted successfully.',
+      userId
+        ? 'Your appointment request has been submitted successfully.'
+        : 'Your appointment request has been submitted. The laboratory will contact you by phone to confirm.',
     )
 
     setLoading(false)
 
     setTimeout(() => {
-      navigate('/dashboard')
-    }, 1600)
+      navigate(userId ? '/dashboard' : '/')
+    }, 2200)
   }
 
   const today = new Date().toISOString().split('T')[0]
+  const homeLink = userId ? '/dashboard' : '/'
 
   if (checkingUser) {
     return (
@@ -123,7 +125,7 @@ function BookAppointment() {
       </div>
 
       <header className="booking-header">
-        <Link to="/dashboard" className="booking-brand">
+        <Link to={homeLink} className="booking-brand">
           <span className="booking-brand-mark">
             <span />
           </span>
@@ -134,14 +136,16 @@ function BookAppointment() {
           </span>
         </Link>
 
-        <Link to="/dashboard" className="booking-back">
-          ← Dashboard
+        <Link to={homeLink} className="booking-back">
+          {userId ? '← Dashboard' : '← Home'}
         </Link>
       </header>
 
       <section className="booking-content">
         <div className="booking-intro">
-          <p className="booking-eyebrow">PATIENT PORTAL</p>
+          <p className="booking-eyebrow">
+            {userId ? 'PATIENT PORTAL' : 'ONLINE BOOKING'}
+          </p>
 
           <h1>
             Book your
@@ -158,7 +162,7 @@ function BookAppointment() {
               <span className="booking-info-icon">✓</span>
               <div>
                 <strong>Simple booking</strong>
-                <small>Choose a service and preferred time.</small>
+                <small>No account needed. Choose a service and time.</small>
               </div>
             </div>
 
@@ -173,11 +177,24 @@ function BookAppointment() {
             <div>
               <span className="booking-info-icon">↗</span>
               <div>
-                <strong>Easy management</strong>
-                <small>Track your request from your dashboard.</small>
+                <strong>
+                  {userId ? 'Easy management' : 'Confirmation by phone'}
+                </strong>
+                <small>
+                  {userId
+                    ? 'Track your request from your dashboard.'
+                    : 'The laboratory will call you to confirm.'}
+                </small>
               </div>
             </div>
           </div>
+
+          {!userId && (
+            <p className="booking-disclaimer">
+              Have an account? <Link to="/login">Sign in</Link> to track your
+              appointments from your dashboard.
+            </p>
+          )}
         </div>
 
         <div className="booking-card">
@@ -194,6 +211,45 @@ function BookAppointment() {
           </div>
 
           <form onSubmit={handleSubmit} className="booking-form">
+            {!userId && (
+              <div className="booking-form-row">
+                <div className="booking-field">
+                  <label htmlFor="guestName">
+                    Full name
+                    <span>*</span>
+                  </label>
+
+                  <input
+                    id="guestName"
+                    type="text"
+                    value={guestName}
+                    onChange={(event) => setGuestName(event.target.value)}
+                    autoComplete="name"
+                    maxLength={100}
+                    required
+                  />
+                </div>
+
+                <div className="booking-field">
+                  <label htmlFor="guestPhone">
+                    Phone number
+                    <span>*</span>
+                  </label>
+
+                  <input
+                    id="guestPhone"
+                    type="tel"
+                    value={guestPhone}
+                    onChange={(event) => setGuestPhone(event.target.value)}
+                    autoComplete="tel"
+                    placeholder="0671 33 33 71"
+                    maxLength={20}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="booking-field">
               <label htmlFor="service">
                 Laboratory service
@@ -293,7 +349,7 @@ function BookAppointment() {
             <button
               type="submit"
               className="booking-submit"
-              disabled={loading}
+              disabled={loading || Boolean(success)}
             >
               {loading ? (
                 <>

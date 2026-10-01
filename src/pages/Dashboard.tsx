@@ -19,6 +19,8 @@ function Dashboard() {
   const [user, setUser] = useState<any>(null)
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
+  const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [actionError, setActionError] = useState('')
 
   useEffect(() => {
     loadDashboard()
@@ -57,6 +59,38 @@ function Dashboard() {
   async function handleSignOut() {
     await supabase.auth.signOut()
     navigate('/login')
+  }
+
+  async function handleCancel(id: string) {
+    if (!window.confirm('Cancel this appointment request?')) return
+
+    setActionError('')
+    setCancellingId(id)
+
+    // .select('id') returns the updated rows, so we can detect the case where
+    // the database rules blocked the change without raising an error.
+    const { data, error } = await supabase
+      .from('appointments')
+      .update({ status: 'cancelled' })
+      .eq('id', id)
+      .select('id')
+
+    setCancellingId(null)
+
+    if (error || !data || data.length === 0) {
+      setActionError(
+        'We could not cancel this appointment. It may already be confirmed. Please call the laboratory.',
+      )
+      return
+    }
+
+    setAppointments((current) =>
+      current.map((appointment) =>
+        appointment.id === id
+          ? { ...appointment, status: 'cancelled' }
+          : appointment,
+      ),
+    )
   }
 
   const upcomingAppointments = useMemo(
@@ -223,6 +257,12 @@ function Dashboard() {
                 </Link>
               </div>
 
+              {actionError && (
+                <p className="dashboard-action-error" role="alert">
+                  {actionError}
+                </p>
+              )}
+
               {upcomingAppointments.length === 0 ? (
                 <div className="dashboard-empty">
                   <div className="dashboard-empty-icon">＋</div>
@@ -237,7 +277,7 @@ function Dashboard() {
                     to="/book-appointment"
                     className="dashboard-empty-button"
                   >
-                    Book your first appointment
+                    Book an appointment
                   </Link>
                 </div>
               ) : (
@@ -282,6 +322,19 @@ function Dashboard() {
 
                         {appointment.notes && (
                           <small>{appointment.notes}</small>
+                        )}
+
+                        {appointment.status === 'pending' && (
+                          <button
+                            type="button"
+                            className="appointment-cancel"
+                            onClick={() => handleCancel(appointment.id)}
+                            disabled={cancellingId === appointment.id}
+                          >
+                            {cancellingId === appointment.id
+                              ? 'Cancelling...'
+                              : 'Cancel request'}
+                          </button>
                         )}
                       </div>
                     </article>
