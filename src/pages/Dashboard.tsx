@@ -1,6 +1,5 @@
-﻿import { useEffect, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import type { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import './Dashboard.css'
 
@@ -17,53 +16,71 @@ type Appointment = {
 function Dashboard() {
   const navigate = useNavigate()
 
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
-  const [appointmentsLoading, setAppointmentsLoading] = useState(true)
 
   useEffect(() => {
-    async function loadDashboard() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+    loadDashboard()
+  }, [])
 
-      if (!user) {
-        navigate('/login')
-        return
-      }
+  async function loadDashboard() {
+    setLoading(true)
 
-      setUser(user)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-      const { data, error } = await supabase
-        .from('appointments')
-        .select(
-          'id, service, appointment_date, appointment_time, status, notes, created_at',
-        )
-        .eq('user_id', user.id)
-        .order('appointment_date', { ascending: true })
-        .order('appointment_time', { ascending: true })
-
-      if (!error && data) {
-        setAppointments(data as Appointment[])
-      }
-
-      setAppointmentsLoading(false)
-      setLoading(false)
+    if (!user) {
+      navigate('/login')
+      return
     }
 
-    loadDashboard()
-  }, [navigate])
+    setUser(user)
+
+    const { data, error } = await supabase
+      .from('appointments')
+      .select(
+        'id, service, appointment_date, appointment_time, status, notes, created_at',
+      )
+      .eq('user_id', user.id)
+      .order('appointment_date', { ascending: true })
+      .order('appointment_time', { ascending: true })
+
+    if (!error && data) {
+      setAppointments(data as Appointment[])
+    }
+
+    setLoading(false)
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut()
     navigate('/login')
   }
 
-  function formatDate(dateString: string) {
-    const date = new Date(`${dateString}T00:00:00`)
+  const upcomingAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.status === 'pending' ||
+          appointment.status === 'confirmed',
+      ),
+    [appointments],
+  )
 
-    return date.toLocaleDateString('en-US', {
+  const completedAppointments = useMemo(
+    () => appointments.filter((appointment) => appointment.status === 'completed'),
+    [appointments],
+  )
+
+  const displayName =
+    user?.user_metadata?.full_name ||
+    user?.email?.split('@')[0] ||
+    'Patient'
+
+  function formatDate(date: string) {
+    return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
@@ -71,11 +88,10 @@ function Dashboard() {
     })
   }
 
-  function formatTime(timeString: string) {
-    const [hours, minutes] = timeString.split(':').map(Number)
-
+  function formatTime(time: string) {
+    const [hours, minutes] = time.split(':')
     const date = new Date()
-    date.setHours(hours, minutes, 0, 0)
+    date.setHours(Number(hours), Number(minutes), 0, 0)
 
     return date.toLocaleTimeString('en-US', {
       hour: 'numeric',
@@ -83,293 +99,293 @@ function Dashboard() {
     })
   }
 
-  function getStatusLabel(status: Appointment['status']) {
+  function statusLabel(status: Appointment['status']) {
     return status.charAt(0).toUpperCase() + status.slice(1)
-  }
-
-  function getStatusClass(status: Appointment['status']) {
-    return `appointment-status ${status}`
   }
 
   if (loading) {
     return (
-      <main className="dashboard-page">
-        <div className="dashboard-loading">
-          <div className="dashboard-spinner" />
-          <span>Loading patient portal...</span>
-        </div>
+      <main className="dashboard-loading">
+        <div className="dashboard-loader" />
+        <p>Loading your dashboard...</p>
       </main>
     )
   }
 
-  const fullName =
-    user?.user_metadata?.full_name || 'Patient'
-
-  const firstName = fullName.split(' ')[0]
-
-  const upcomingAppointments = appointments.filter(
-    (appointment) =>
-      appointment.status === 'pending' ||
-      appointment.status === 'confirmed',
-  )
-
   return (
     <main className="dashboard-page">
       <header className="dashboard-header">
-        <Link to="/" className="dashboard-brand">
-          <span className="dashboard-brand-mark">
-            <span />
-            <span />
-            <span />
-          </span>
-
-          <span className="dashboard-brand-text">
-            <strong>AL-AZHAR</strong>
-            <small>MEDICAL LAB</small>
-          </span>
-        </Link>
-
-        <nav className="dashboard-nav">
-          <Link to="/" className="dashboard-home-link">
-            Website
-          </Link>
-
-          <button
-            type="button"
-            className="dashboard-signout"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </button>
-        </nav>
-      </header>
-
-      <section className="dashboard-content">
-        <div className="dashboard-welcome">
-          <div>
-            <span className="dashboard-eyebrow">
-              PATIENT PORTAL
+        <div className="dashboard-header-inner">
+          <Link to="/" className="dashboard-brand">
+            <span className="dashboard-brand-mark">
+              <span />
+              <span />
             </span>
 
-            <h1>
-              Good to see you, {firstName}.
-            </h1>
+            <span className="dashboard-brand-text">
+              <strong>AL-AZHAR</strong>
+              <small>MEDICAL LAB</small>
+            </span>
+          </Link>
 
-            <p>
-              Manage your laboratory appointments and personal information
-              from one place.
-            </p>
-          </div>
+          <div className="dashboard-header-actions">
+            <span className="dashboard-user-email">{user?.email}</span>
 
-          <div className="dashboard-status">
-            <span className="status-dot" />
-            <span>Account active</span>
-          </div>
-        </div>
-
-        <div className="dashboard-overview">
-          <div className="overview-card overview-primary">
-            <div className="overview-icon">
-              +
-            </div>
-
-            <div>
-              <span>APPOINTMENTS</span>
-
-              <strong>
-                {upcomingAppointments.length}
-              </strong>
-
-              <p>
-                Upcoming appointments
-              </p>
-            </div>
-          </div>
-
-          <div className="overview-card">
-            <div className="overview-icon">
-              ✓
-            </div>
-
-            <div>
-              <span>ACCOUNT</span>
-
-              <strong>Active</strong>
-
-              <p>
-                Your patient account is ready
-              </p>
-            </div>
+            <button
+              type="button"
+              className="dashboard-signout"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </button>
           </div>
         </div>
+      </header>
 
-        <div className="dashboard-grid">
-          <section className="dashboard-panel appointment-panel">
-            <div className="panel-header">
+      <section className="dashboard-main">
+        <div className="dashboard-container">
+          <section className="dashboard-welcome">
+            <div>
+              <p className="dashboard-eyebrow">PATIENT PORTAL</p>
+
+              <h1>
+                Welcome back, <span>{displayName}</span>
+              </h1>
+
+              <p className="dashboard-welcome-text">
+                Manage your appointments and keep track of your laboratory visits
+                from one secure place.
+              </p>
+            </div>
+
+            <Link to="/book-appointment" className="dashboard-primary-button">
+              <span>+</span>
+              Book an appointment
+            </Link>
+          </section>
+
+          <section className="dashboard-stat-grid">
+            <div className="dashboard-stat-card">
+              <div className="dashboard-stat-icon blue">
+                <span>▣</span>
+              </div>
+
               <div>
-                <span className="panel-label">
-                  YOUR APPOINTMENTS
-                </span>
-
-                <h2>
-                  Upcoming appointments
-                </h2>
+                <strong>{appointments.length}</strong>
+                <span>Total appointments</span>
               </div>
-
-              <Link
-                to="/book-appointment"
-                className="panel-action"
-              >
-                + Book
-              </Link>
             </div>
 
-            {appointmentsLoading ? (
-              <div className="appointments-loading">
-                Loading appointments...
+            <div className="dashboard-stat-card">
+              <div className="dashboard-stat-icon teal">
+                <span>✓</span>
               </div>
-            ) : upcomingAppointments.length === 0 ? (
-              <div className="empty-appointments">
-                <div className="empty-icon">
-                  <span>+</span>
+
+              <div>
+                <strong>{upcomingAppointments.length}</strong>
+                <span>Upcoming visits</span>
+              </div>
+            </div>
+
+            <div className="dashboard-stat-card">
+              <div className="dashboard-stat-icon green">
+                <span>◷</span>
+              </div>
+
+              <div>
+                <strong>{completedAppointments.length}</strong>
+                <span>Completed visits</span>
+              </div>
+            </div>
+
+            <div className="dashboard-stat-card">
+              <div className="dashboard-stat-icon purple">
+                <span>●</span>
+              </div>
+
+              <div>
+                <strong>Active</strong>
+                <span>Account status</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="dashboard-content-grid">
+            <div className="dashboard-card appointments-card">
+              <div className="dashboard-card-header">
+                <div>
+                  <p className="dashboard-card-kicker">YOUR SCHEDULE</p>
+                  <h2>Upcoming appointments</h2>
                 </div>
 
-                <h3>
-                  No appointments yet
-                </h3>
-
-                <p>
-                  Book your first laboratory appointment and it will appear
-                  here.
-                </p>
-
-                <Link
-                  to="/book-appointment"
-                  className="dashboard-primary-action"
-                >
-                  Book an Appointment
-                  <span>→</span>
+                <Link to="/book-appointment" className="dashboard-card-link">
+                  New appointment →
                 </Link>
               </div>
-            ) : (
-              <div className="appointment-list">
-                {upcomingAppointments.map((appointment) => (
-                  <article
-                    key={appointment.id}
-                    className="appointment-item"
+
+              {upcomingAppointments.length === 0 ? (
+                <div className="dashboard-empty">
+                  <div className="dashboard-empty-icon">＋</div>
+
+                  <h3>No upcoming appointments</h3>
+
+                  <p>
+                    You currently have no scheduled laboratory visits.
+                  </p>
+
+                  <Link
+                    to="/book-appointment"
+                    className="dashboard-empty-button"
                   >
-                    <div className="appointment-date">
-                      <span>
-                        {new Date(
-                          `${appointment.appointment_date}T00:00:00`,
-                        ).toLocaleDateString('en-US', {
-                          month: 'short',
-                        })}
-                      </span>
+                    Book your first appointment
+                  </Link>
+                </div>
+              ) : (
+                <div className="dashboard-appointment-list">
+                  {upcomingAppointments.map((appointment) => (
+                    <article
+                      key={appointment.id}
+                      className="dashboard-appointment"
+                    >
+                      <div className="appointment-date">
+                        <strong>
+                          {new Date(
+                            `${appointment.appointment_date}T00:00:00`,
+                          ).getDate()}
+                        </strong>
 
-                      <strong>
-                        {new Date(
-                          `${appointment.appointment_date}T00:00:00`,
-                        ).getDate()}
-                      </strong>
+                        <span>
+                          {new Date(
+                            `${appointment.appointment_date}T00:00:00`,
+                          ).toLocaleDateString('en-US', {
+                            month: 'short',
+                          })}
+                        </span>
+                      </div>
+
+                      <div className="appointment-details">
+                        <div className="appointment-title-row">
+                          <h3>{appointment.service}</h3>
+
+                          <span
+                            className={`appointment-status ${appointment.status}`}
+                          >
+                            {statusLabel(appointment.status)}
+                          </span>
+                        </div>
+
+                        <p>
+                          {formatDate(appointment.appointment_date)}
+                          <span>•</span>
+                          {formatTime(appointment.appointment_time)}
+                        </p>
+
+                        {appointment.notes && (
+                          <small>{appointment.notes}</small>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <aside className="dashboard-side-column">
+              <div className="dashboard-card patient-card">
+                <div className="dashboard-card-header">
+                  <div>
+                    <p className="dashboard-card-kicker">ACCOUNT</p>
+                    <h2>Patient information</h2>
+                  </div>
+                </div>
+
+                <div className="patient-avatar">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
+
+                <div className="patient-info">
+                  <div>
+                    <span>Full name</span>
+                    <strong>{displayName}</strong>
+                  </div>
+
+                  <div>
+                    <span>Email</span>
+                    <strong>{user?.email}</strong>
+                  </div>
+
+                  <div>
+                    <span>Account status</span>
+                    <strong className="patient-active">
+                      <i />
+                      Active
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="dashboard-help-card">
+                <div className="help-icon">?</div>
+
+                <div>
+                  <p>Need assistance?</p>
+                  <span>Contact the laboratory directly.</span>
+
+                  <a href="tel:0671333371">0671 33 33 71 →</a>
+                </div>
+              </div>
+            </aside>
+          </section>
+
+          {appointments.length > 0 && (
+            <section className="dashboard-card history-card">
+              <div className="dashboard-card-header">
+                <div>
+                  <p className="dashboard-card-kicker">APPOINTMENT HISTORY</p>
+                  <h2>Your recent appointments</h2>
+                </div>
+              </div>
+
+              <div className="dashboard-history-list">
+                {appointments.slice(0, 5).map((appointment) => (
+                  <div className="history-row" key={appointment.id}>
+                    <div className="history-service">
+                      <span className="history-dot" />
+                      <strong>{appointment.service}</strong>
                     </div>
 
-                    <div className="appointment-info">
-                      <strong>
-                        {appointment.service}
-                      </strong>
+                    <span>
+                      {formatDate(appointment.appointment_date)}
+                    </span>
 
-                      <span>
-                        {formatDate(appointment.appointment_date)}
-                      </span>
-
-                      <span>
-                        {formatTime(appointment.appointment_time)}
-                      </span>
-                    </div>
+                    <span className="history-time">
+                      {formatTime(appointment.appointment_time)}
+                    </span>
 
                     <span
-                      className={getStatusClass(
-                        appointment.status,
-                      )}
+                      className={`history-status ${appointment.status}`}
                     >
-                      {getStatusLabel(appointment.status)}
+                      {statusLabel(appointment.status)}
                     </span>
-                  </article>
+                  </div>
                 ))}
               </div>
-            )}
-          </section>
+            </section>
+          )}
+        </div>
+      </section>
 
-          <section className="dashboard-panel account-panel">
-            <div className="panel-header">
-              <div>
-                <span className="panel-label">
-                  ACCOUNT
-                </span>
-
-                <h2>
-                  Patient information
-                </h2>
-              </div>
-            </div>
-
-            <div className="account-details">
-              <div className="account-detail">
-                <span>FULL NAME</span>
-
-                <strong>
-                  {fullName}
-                </strong>
-              </div>
-
-              <div className="account-detail">
-                <span>EMAIL ADDRESS</span>
-
-                <strong>
-                  {user?.email}
-                </strong>
-              </div>
-
-              <div className="account-detail">
-                <span>ACCOUNT STATUS</span>
-
-                <strong className="account-active">
-                  <span />
-                  Active
-                </strong>
-              </div>
-            </div>
-          </section>
+      <footer className="dashboard-footer">
+        <div>
+          <strong>AL-AZHAR MEDICAL LAB</strong>
+          <span>Reliable laboratory services in Cherchell, Algeria.</span>
         </div>
 
-        <section className="dashboard-help">
-          <div className="help-icon">
-            ?
-          </div>
-
-          <div>
-            <span>NEED ASSISTANCE?</span>
-
-            <strong>
-              Contact Al-Azhar Medical Lab
-            </strong>
-
-            <p>
-              For appointments or laboratory information, contact our team
-              directly.
-            </p>
-          </div>
-
-          <a
-            href="tel:+213671333371"
-            className="help-button"
-          >
-            Call Laboratory
-            <span>→</span>
-          </a>
-        </section>
-      </section>
+        <div>
+          <span>Rue Frères Saadoun, Cherchell</span>
+          <span>0671 33 33 71</span>
+        </div>
+      </footer>
     </main>
   )
 }

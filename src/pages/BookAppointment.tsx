@@ -33,50 +33,40 @@ function BookAppointment() {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [notes, setNotes] = useState('')
-
-  const [loading, setLoading] = useState(true)
-  const [booking, setBooking] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [checkingUser, setCheckingUser] = useState(true)
 
   useEffect(() => {
-    async function checkUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+    checkUser()
+  }, [])
 
-      if (!user) {
-        navigate('/login')
-        return
-      }
+  async function checkUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-      setLoading(false)
+    if (!user) {
+      navigate('/login')
+      return
     }
 
-    checkUser()
-  }, [navigate])
-
-  function getToday() {
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = String(today.getMonth() + 1).padStart(2, '0')
-    const day = String(today.getDate()).padStart(2, '0')
-
-    return `${year}-${month}-${day}`
+    setCheckingUser(false)
   }
 
-  async function handleBooking(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     setError('')
-    setSuccess(false)
+    setSuccess('')
 
     if (!service || !date || !time) {
       setError('Please complete all required fields.')
       return
     }
 
-    setBooking(true)
+    setLoading(true)
 
     const {
       data: { user },
@@ -87,67 +77,58 @@ function BookAppointment() {
       return
     }
 
-    const { error } = await supabase
-      .from('appointments')
-      .insert({
-        user_id: user.id,
-        service,
-        appointment_date: date,
-        appointment_time: time,
-        notes: notes.trim() || null,
-        status: 'pending',
-      })
+    const { error } = await supabase.from('appointments').insert({
+      user_id: user.id,
+      service,
+      appointment_date: date,
+      appointment_time: time,
+      notes: notes.trim() || null,
+      status: 'pending',
+    })
 
     if (error) {
       setError(error.message)
-      setBooking(false)
+      setLoading(false)
       return
     }
 
-    setSuccess(true)
-    setBooking(false)
+    setSuccess(
+      'Your appointment request has been submitted successfully.',
+    )
+
+    setLoading(false)
 
     setTimeout(() => {
       navigate('/dashboard')
-    }, 1800)
+    }, 1600)
   }
 
-  if (loading) {
+  const today = new Date().toISOString().split('T')[0]
+
+  if (checkingUser) {
     return (
-      <main className="booking-page">
-        <div className="booking-loading">
-          Loading booking page...
-        </div>
-      </main>
-    )
-  }
-
-  if (success) {
-    return (
-      <main className="booking-page">
-        <div className="booking-success">
-          <div className="success-icon">✓</div>
-
-          <span>APPOINTMENT REQUESTED</span>
-
-          <h1>Appointment booked.</h1>
-
-          <p>
-            Your appointment request has been successfully submitted.
-            Redirecting you to your patient portal...
-          </p>
-        </div>
+      <main className="booking-loading">
+        <div className="booking-loader" />
+        <p>Preparing your appointment form...</p>
       </main>
     )
   }
 
   return (
     <main className="booking-page">
+      <div className="booking-background">
+        <div className="booking-glow booking-glow-one" />
+        <div className="booking-glow booking-glow-two" />
+        <div className="booking-grid" />
+      </div>
+
       <header className="booking-header">
         <Link to="/dashboard" className="booking-brand">
-          <span className="booking-brand-mark">+</span>
+          <span className="booking-brand-mark">
+            <span />
+          </span>
 
-          <span>
+          <span className="booking-brand-text">
             <strong>AL-AZHAR</strong>
             <small>MEDICAL LAB</small>
           </span>
@@ -160,147 +141,179 @@ function BookAppointment() {
 
       <section className="booking-content">
         <div className="booking-intro">
-          <span>APPOINTMENTS</span>
+          <p className="booking-eyebrow">PATIENT PORTAL</p>
 
-          <h1>Book an appointment.</h1>
+          <h1>
+            Book your
+            <span> laboratory visit.</span>
+          </h1>
 
           <p>
-            Select your laboratory service, preferred date, and available
-            time.
+            Select your preferred service, date, and time. Your request will
+            be submitted to the laboratory for confirmation.
           </p>
+
+          <div className="booking-info-list">
+            <div>
+              <span className="booking-info-icon">✓</span>
+              <div>
+                <strong>Simple booking</strong>
+                <small>Choose a service and preferred time.</small>
+              </div>
+            </div>
+
+            <div>
+              <span className="booking-info-icon">◷</span>
+              <div>
+                <strong>Flexible scheduling</strong>
+                <small>Select from the available time slots.</small>
+              </div>
+            </div>
+
+            <div>
+              <span className="booking-info-icon">↗</span>
+              <div>
+                <strong>Easy management</strong>
+                <small>Track your request from your dashboard.</small>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <form
-          className="booking-card"
-          onSubmit={handleBooking}
-        >
-          <div className="booking-section">
-            <div className="booking-section-heading">
-              <span>01</span>
-              <div>
-                <h2>Choose a service</h2>
-                <p>Select the laboratory service you need.</p>
-              </div>
+        <div className="booking-card">
+          <div className="booking-card-header">
+            <div>
+              <p>APPOINTMENT REQUEST</p>
+              <h2>Choose your visit details</h2>
             </div>
 
-            <div className="service-grid">
-              {services.map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`service-option ${
-                    service === item ? 'selected' : ''
-                  }`}
-                  onClick={() => setService(item)}
-                >
-                  <span className="service-radio">
-                    {service === item && <span />}
-                  </span>
-
-                  <span>{item}</span>
-                </button>
-              ))}
-            </div>
+            <span className="booking-secure">
+              <i />
+              Secure
+            </span>
           </div>
 
-          <div className="booking-divider" />
+          <form onSubmit={handleSubmit} className="booking-form">
+            <div className="booking-field">
+              <label htmlFor="service">
+                Laboratory service
+                <span>*</span>
+              </label>
 
-          <div className="booking-section">
-            <div className="booking-section-heading">
-              <span>02</span>
-              <div>
-                <h2>Choose a date</h2>
-                <p>Select your preferred appointment date.</p>
-              </div>
-            </div>
-
-            <label className="booking-field">
-              <span>APPOINTMENT DATE</span>
-
-              <input
-                type="date"
-                value={date}
-                min={getToday()}
-                onChange={(event) => setDate(event.target.value)}
+              <select
+                id="service"
+                value={service}
+                onChange={(event) => setService(event.target.value)}
                 required
-              />
-            </label>
-          </div>
+              >
+                <option value="">Select a service</option>
 
-          <div className="booking-divider" />
-
-          <div className="booking-section">
-            <div className="booking-section-heading">
-              <span>03</span>
-              <div>
-                <h2>Choose a time</h2>
-                <p>Select an available appointment time.</p>
-              </div>
+                {services.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <div className="time-grid">
-              {timeSlots.map((slot) => (
-                <button
-                  type="button"
-                  key={slot}
-                  className={`time-option ${
-                    time === slot ? 'selected' : ''
-                  }`}
-                  onClick={() => setTime(slot)}
+            <div className="booking-form-row">
+              <div className="booking-field">
+                <label htmlFor="date">
+                  Preferred date
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="date"
+                  type="date"
+                  min={today}
+                  value={date}
+                  onChange={(event) => setDate(event.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="booking-field">
+                <label htmlFor="time">
+                  Preferred time
+                  <span>*</span>
+                </label>
+
+                <select
+                  id="time"
+                  value={time}
+                  onChange={(event) => setTime(event.target.value)}
+                  required
                 >
-                  {slot}
-                </button>
-              ))}
-            </div>
-          </div>
+                  <option value="">Select a time</option>
 
-          <div className="booking-divider" />
-
-          <div className="booking-section">
-            <div className="booking-section-heading">
-              <span>04</span>
-              <div>
-                <h2>Additional information</h2>
-                <p>Optional information for the laboratory team.</p>
+                  {timeSlots.map((slot) => (
+                    <option key={slot} value={slot}>
+                      {slot}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            <label className="booking-field">
-              <span>NOTES</span>
+            <div className="booking-field">
+              <div className="booking-label-row">
+                <label htmlFor="notes">Additional notes</label>
+                <span>Optional</span>
+              </div>
 
               <textarea
+                id="notes"
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
-                placeholder="Add any relevant information..."
+                placeholder="Add any information you would like the laboratory to know..."
                 rows={4}
+                maxLength={500}
               />
-            </label>
-          </div>
 
-          {error && (
-            <div className="booking-error">
-              {error}
+              <small className="booking-character-count">
+                {notes.length}/500
+              </small>
             </div>
-          )}
 
-          <div className="booking-submit-area">
-            <div>
-              <strong>Ready to book?</strong>
-              <span>
-                Your request will be saved as pending.
-              </span>
-            </div>
+            {error && (
+              <div className="booking-message booking-error">
+                <span>!</span>
+                <p>{error}</p>
+              </div>
+            )}
+
+            {success && (
+              <div className="booking-message booking-success">
+                <span>✓</span>
+                <p>{success}</p>
+              </div>
+            )}
 
             <button
               type="submit"
               className="booking-submit"
-              disabled={booking || !service || !date || !time}
+              disabled={loading}
             >
-              {booking ? 'Booking...' : 'Confirm Appointment'}
-              {!booking && <span>→</span>}
+              {loading ? (
+                <>
+                  <span className="booking-spinner" />
+                  Submitting request...
+                </>
+              ) : (
+                <>
+                  Submit appointment request
+                  <span>→</span>
+                </>
+              )}
             </button>
-          </div>
-        </form>
+
+            <p className="booking-disclaimer">
+              Submitting this form creates a pending appointment request.
+              The laboratory may contact you to confirm the appointment.
+            </p>
+          </form>
+        </div>
       </section>
     </main>
   )

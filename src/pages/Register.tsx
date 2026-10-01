@@ -2,12 +2,16 @@
 import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import './Register.css'
 
 function Register() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -55,116 +59,238 @@ function Register() {
   }
 
   return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <Link to="/" className="auth-brand">
-          <span className="brand-mark">
-            <span />
-            <span />
-            <span />
-          </span>
+    <main className="register-page">
+      <div className="register-background">
+        <div className="register-glow register-glow-one" />
+        <div className="register-glow register-glow-two" />
+        <div className="register-grid" />
+      </div>
 
-          <span>
-            <strong>AL-AZHAR</strong>
-            <small>MEDICAL LAB</small>
-          </span>
-        </Link>
+      <div className="register-shell">
+        <div className="register-side">
+          <Link to="/" className="register-brand">
+            <span className="register-brand-mark">+</span>
 
-        <div className="auth-heading">
-          <span className="section-label">PATIENT PORTAL</span>
+            <span className="register-brand-name">
+              <strong>AL-AZHAR</strong>
+              <small>MEDICAL LAB</small>
+            </span>
+          </Link>
 
-          <h1>Create your account.</h1>
+          <div className="register-side-content">
+            <span className="register-kicker">PATIENT PORTAL</span>
 
-          <p>
-            Create a patient account to manage your appointments and profile.
-          </p>
+            <h1>
+              Better access
+              <br />
+              <span>to your care.</span>
+            </h1>
+
+            <p>
+              Create your secure patient account and make managing your
+              laboratory visits simpler.
+            </p>
+
+            <div className="register-feature-list">
+              <div>
+                <span>01</span>
+                <p>Create your personal patient account</p>
+              </div>
+
+              <div>
+                <span>02</span>
+                <p>Request appointments online</p>
+              </div>
+
+              <div>
+                <span>03</span>
+                <p>Keep your laboratory visits organized</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="register-side-footer">
+            <span>Cherchell, Algeria</span>
+            <span>•</span>
+            <span>Al-Azhar Medical Lab</span>
+          </div>
         </div>
 
-        <form onSubmit={handleRegister} className="auth-form">
-          <label>
-            Full Name
+        <div className="register-panel">
+          <div className="register-card">
+            <div className="register-mobile-brand">
+              <Link to="/" className="register-brand">
+                <span className="register-brand-mark">+</span>
 
-            <input
-              type="text"
-              value={fullName}
-              onChange={(event) => setFullName(event.target.value)}
-              placeholder="Your full name"
-              autoComplete="name"
-              required
-            />
-          </label>
+                <span className="register-brand-name">
+                  <strong>AL-AZHAR</strong>
+                  <small>MEDICAL LAB</small>
+                </span>
+              </Link>
+            </div>
 
-          <label>
-            Email
+            <div className="register-heading">
+              <span className="register-section-label">
+                CREATE ACCOUNT
+              </span>
 
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
-            />
-          </label>
+              <h2>Welcome.</h2>
 
-          <label>
-            Password
+              <p>
+                Create your patient account to manage your appointments.
+              </p>
+            </div>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="At least 6 characters"
-              autoComplete="new-password"
-              minLength={6}
-              required
-            />
-          </label>
+            <form onSubmit={handleRegister} className="register-form">
+              <div className="register-field">
+                <label htmlFor="full-name">Full name</label>
 
-          <label>
-            Confirm Password
+                <div className="register-input-wrap">
+                  <span className="register-input-icon">◎</span>
 
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              placeholder="Enter your password again"
-              autoComplete="new-password"
-              minLength={6}
-              required
-            />
-          </label>
+                  <input
+                    id="full-name"
+                    type="text"
+                    value={fullName}
+                    onChange={(event) => setFullName(event.target.value)}
+                    placeholder="Your full name"
+                    autoComplete="name"
+                    required
+                  />
+                </div>
+              </div>
 
-          {error && (
-            <p className="auth-error">
-              {error}
-            </p>
-          )}
+              <div className="register-field">
+                <label htmlFor="register-email">Email address</label>
 
-          {success && (
-            <p className="auth-success">
-              {success}
-            </p>
-          )}
+                <div className="register-input-wrap">
+                  <span className="register-input-icon">@</span>
 
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+                  <input
+                    id="register-email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    required
+                  />
+                </div>
+              </div>
 
-        <p className="auth-footer">
-          Already have an account?{' '}
-          <Link to="/login">
-            Sign in
-          </Link>
-        </p>
+              <div className="register-field">
+                <div className="register-label-row">
+                  <label htmlFor="register-password">Password</label>
 
-        <Link to="/" className="auth-back">
-          &larr; Back to website
-        </Link>
+                  <button
+                    type="button"
+                    className="register-password-toggle"
+                    onClick={() =>
+                      setShowPassword((current) => !current)
+                    }
+                  >
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+
+                <div className="register-input-wrap">
+                  <span className="register-input-icon">•••</span>
+
+                  <input
+                    id="register-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="At least 6 characters"
+                    autoComplete="new-password"
+                    minLength={6}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="register-field">
+                <div className="register-label-row">
+                  <label htmlFor="confirm-password">
+                    Confirm password
+                  </label>
+
+                  <button
+                    type="button"
+                    className="register-password-toggle"
+                    onClick={() =>
+                      setShowConfirmPassword((current) => !current)
+                    }
+                  >
+                    {showConfirmPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+
+                <div className="register-input-wrap">
+                  <span className="register-input-icon">•••</span>
+
+                  <input
+                    id="confirm-password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(event) =>
+                      setConfirmPassword(event.target.value)
+                    }
+                    placeholder="Enter your password again"
+                    autoComplete="new-password"
+                    minLength={6}
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="register-message register-error">
+                  <span>!</span>
+                  <p>{error}</p>
+                </div>
+              )}
+
+              {success && (
+                <div className="register-message register-success">
+                  <span>✓</span>
+                  <p>{success}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="register-submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="register-spinner" />
+                    Creating account...
+                  </>
+                ) : (
+                  <>
+                    Create account
+                    <span>→</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="register-divider">
+              <span>ALREADY REGISTERED?</span>
+            </div>
+
+            <Link to="/login" className="register-login">
+              Sign in to your account
+              <span>→</span>
+            </Link>
+
+            <Link to="/" className="register-back">
+              ← Back to website
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   )
