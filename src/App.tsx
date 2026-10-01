@@ -130,34 +130,36 @@ function Home() {
           </div>
 
           <div className="hero-visual">
-            <div className="hero-card">
-              <div className="hero-card-top">
-                <span>LABORATORY</span>
-                <span className="status-dot" />
+            <div className="lab-card hero-photo-card">
+              <img
+                className="hero-photo"
+                src="https://images.pexels.com/photos/8442147/pexels-photo-8442147.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                alt="Medical professional working in a modern laboratory"
+              />
+              <div className="hero-photo-overlay" />
+              <div className="card-top">
+                <span className="card-label">AL-AZHAR MEDICAL LAB</span>
+                <span className="live-indicator">
+                  <i />
+                  LABORATORY
+                </span>
               </div>
-
-              <div className="lab-symbol">
-                <div className="symbol-ring">
-                  <span>+</span>
-                </div>
-              </div>
-
-              <div className="hero-card-bottom">
-                <strong>Al-Azhar Medical Lab</strong>
-                <span>Cherchell, Algeria</span>
+              <div className="hero-photo-caption">
+                <strong>Modern laboratory care</strong>
+                <span>Professional testing in Cherchell</span>
               </div>
             </div>
 
-            <div className="floating-card floating-card-top">
-              <span className="floating-icon">✓</span>
+            <div className="floating-card result-card">
+              <span className="result-icon">✓</span>
               <div>
                 <strong>Patient focused</strong>
                 <small>Simple &amp; clear process</small>
               </div>
             </div>
 
-            <div className="floating-card floating-card-bottom">
-              <span className="floating-icon">+</span>
+            <div className="floating-card accuracy-card">
+              <span className="result-icon">+</span>
               <div>
                 <strong>Laboratory care</strong>
                 <small>Testing &amp; diagnostics</small>
