@@ -32,6 +32,46 @@ const initialForm = {
   ane: '',
 }
 
+type FormField = keyof typeof initialForm
+
+const numericFields: readonly [
+  FormField,
+  string,
+  string,
+][] = [
+  ['age', 'Age', 'years'],
+  ['bp', 'Blood pressure', 'mmHg'],
+  ['sg', 'Specific gravity', '1.005–1.025'],
+  ['al', 'Urine albumin', '0–5'],
+  ['su', 'Urine sugar', '0–5'],
+  ['bgr', 'Blood glucose', 'mg/dL'],
+  ['bu', 'Blood urea', 'mg/dL'],
+  ['sc', 'Serum creatinine', 'mg/dL'],
+  ['sod', 'Sodium', 'mEq/L'],
+  ['pot', 'Potassium', 'mEq/L'],
+  ['hemo', 'Hemoglobin', 'g/dL'],
+  ['pcv', 'Packed cell volume', '%'],
+  ['wbcc', 'White blood cell count', 'cells/cumm'],
+  ['rbcc', 'Red blood cell count', 'millions/cumm'],
+]
+
+const categoricalFields: readonly [
+  FormField,
+  string,
+  readonly string[],
+][] = [
+  ['rbc', 'Red blood cells', ['normal', 'abnormal']],
+  ['pc', 'Pus cells', ['normal', 'abnormal']],
+  ['pcc', 'Pus cell clumps', ['present', 'notpresent']],
+  ['ba', 'Bacteria', ['present', 'notpresent']],
+  ['htn', 'Hypertension', ['yes', 'no']],
+  ['dm', 'Diabetes mellitus', ['yes', 'no']],
+  ['cad', 'Coronary artery disease', ['yes', 'no']],
+  ['appet', 'Appetite', ['good', 'poor']],
+  ['pe', 'Pedal edema', ['yes', 'no']],
+  ['ane', 'Anemia', ['yes', 'no']],
+]
+
 function toNumber(value: string) {
   if (value.trim() === '') {
     return null
@@ -48,7 +88,7 @@ export default function LabAI() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  function update(name: keyof typeof initialForm, value: string) {
+  function update(name: FormField, value: string) {
     setForm((current) => ({
       ...current,
       [name]: value,
@@ -189,22 +229,7 @@ export default function LabAI() {
             </div>
 
             <div className="ai-fields">
-              {[
-                ['age', 'Age', 'years'],
-                ['bp', 'Blood pressure', 'mmHg'],
-                ['sg', 'Specific gravity', '1.005–1.025'],
-                ['al', 'Urine albumin', '0–5'],
-                ['su', 'Urine sugar', '0–5'],
-                ['bgr', 'Blood glucose', 'mg/dL'],
-                ['bu', 'Blood urea', 'mg/dL'],
-                ['sc', 'Serum creatinine', 'mg/dL'],
-                ['sod', 'Sodium', 'mEq/L'],
-                ['pot', 'Potassium', 'mEq/L'],
-                ['hemo', 'Hemoglobin', 'g/dL'],
-                ['pcv', 'Packed cell volume', '%'],
-                ['wbcc', 'White blood cell count', 'cells/cumm'],
-                ['rbcc', 'Red blood cell count', 'millions/cumm'],
-              ].map(([name, label, unit]) => (
+              {numericFields.map(([name, label, unit]) => (
                 <label key={name}>
                   <span>
                     {label}
@@ -214,7 +239,7 @@ export default function LabAI() {
                   <input
                     type="number"
                     step="any"
-                    value={form[name as keyof typeof form]}
+                    value={form[name]}
                     onChange={(event) =>
                       update(name, event.target.value)
                     }
@@ -225,30 +250,19 @@ export default function LabAI() {
             </div>
 
             <div className="ai-fields">
-              {[
-                ['rbc', 'Red blood cells', ['normal', 'abnormal']],
-                ['pc', 'Pus cells', ['normal', 'abnormal']],
-                ['pcc', 'Pus cell clumps', ['present', 'notpresent']],
-                ['ba', 'Bacteria', ['present', 'notpresent']],
-                ['htn', 'Hypertension', ['yes', 'no']],
-                ['dm', 'Diabetes mellitus', ['yes', 'no']],
-                ['cad', 'Coronary artery disease', ['yes', 'no']],
-                ['appet', 'Appetite', ['good', 'poor']],
-                ['pe', 'Pedal edema', ['yes', 'no']],
-                ['ane', 'Anemia', ['yes', 'no']],
-              ].map(([name, label, options]) => (
+              {categoricalFields.map(([name, label, options]) => (
                 <label key={name}>
                   <span>{label}</span>
 
                   <select
-                    value={form[name as keyof typeof form]}
+                    value={form[name]}
                     onChange={(event) =>
                       update(name, event.target.value)
                     }
                   >
                     <option value="">Not provided</option>
 
-                    {(options as string[]).map((option) => (
+                    {options.map((option) => (
                       <option key={option} value={option}>
                         {option}
                       </option>
