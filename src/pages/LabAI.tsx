@@ -48,7 +48,7 @@ export default function LabAI() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  function update(name: string, value: string) {
+  function update(name: keyof typeof initialForm, value: string) {
     setForm((current) => ({
       ...current,
       [name]: value,
