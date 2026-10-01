@@ -221,23 +221,41 @@ function Home() {
           </div>
 
           <div className="about-content">
-            <span className="section-label">ABOUT THE LABORATORY</span>
+            <span className="section-label">ABOUT THE PROJECT</span>
 
             <h2>
-              Focused on clear,
+              More than a laboratory
               <br />
-              <span>dependable testing.</span>
+              <span>website.</span>
             </h2>
 
             <p>
-              Al-Azhar Medical Lab provides laboratory testing and diagnostic
-              services for patients in Cherchell and the surrounding area.
+              Al-Azhar Medical Lab is a full-stack medical laboratory platform
+              that I built from scratch, combining a modern patient-facing
+              interface with authentication, appointment management, database
+              integration, and an AI-powered laboratory screening feature.
             </p>
 
             <p>
-              The website is designed to make it easier for patients to
-              understand available services, create an account, and request
-              appointments online.
+              I built the complete React and TypeScript frontend, designed the
+              patient experience, implemented Supabase authentication and
+              appointment workflows, and secured patient data with Row Level
+              Security.
+            </p>
+
+            <p>
+              I also developed a machine-learning screening system using the
+              UCI Chronic Kidney Disease dataset, trained a Random Forest model,
+              integrated it into a Python FastAPI backend, and connected the
+              production frontend to the cloud API for real-time screening
+              results.
+            </p>
+
+            <p>
+              The application is deployed with the frontend on Vercel and the
+              AI service on Render, demonstrating a complete workflow across
+              frontend, backend, database, machine learning, API integration,
+              security, and cloud deployment.
             </p>
 
             <a href="/book-appointment" className="text-link">
