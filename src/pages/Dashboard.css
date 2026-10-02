@@ -790,3 +790,23 @@
     gap: 7px;
   }
 }
+.dashboard-admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #147d88;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dashboard-admin-button:hover {
+  background: #106a74;
+  transform: translateY(-1px);
+}

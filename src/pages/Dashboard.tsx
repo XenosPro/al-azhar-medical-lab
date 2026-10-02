@@ -21,9 +21,33 @@ function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [cancellingId, setCancellingId] = useState<string | null>(null)
   const [actionError, setActionError] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     loadDashboard()
+  }, [])
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) {
+        return
+      }
+
+      const { data, error } = await supabase.rpc('is_admin')
+
+      if (error) {
+        console.error('Admin check failed:', error)
+        return
+      }
+
+      setIsAdmin(data === true)
+    }
+
+    checkAdmin()
   }, [])
 
   async function loadDashboard() {
@@ -67,8 +91,6 @@ function Dashboard() {
     setActionError('')
     setCancellingId(id)
 
-    // .select('id') returns the updated rows, so we can detect the case where
-    // the database rules blocked the change without raising an error.
     const { data, error } = await supabase
       .from('appointments')
       .update({ status: 'cancelled' })
@@ -104,7 +126,10 @@ function Dashboard() {
   )
 
   const completedAppointments = useMemo(
-    () => appointments.filter((appointment) => appointment.status === 'completed'),
+    () =>
+      appointments.filter(
+        (appointment) => appointment.status === 'completed',
+      ),
     [appointments],
   )
 
@@ -165,6 +190,15 @@ function Dashboard() {
           <div className="dashboard-header-actions">
             <span className="dashboard-user-email">{user?.email}</span>
 
+            {isAdmin && (
+              <Link
+                to="/admin-dashboard"
+                className="dashboard-admin-button"
+              >
+                Admin Dashboard
+              </Link>
+            )}
+
             <button
               type="button"
               className="dashboard-signout"
@@ -187,12 +221,15 @@ function Dashboard() {
               </h1>
 
               <p className="dashboard-welcome-text">
-                Manage your appointments and keep track of your laboratory visits
-                from one secure place.
+                Manage your appointments and keep track of your laboratory
+                visits from one secure place.
               </p>
             </div>
 
-            <Link to="/book-appointment" className="dashboard-primary-button">
+            <Link
+              to="/book-appointment"
+              className="dashboard-primary-button"
+            >
               <span>+</span>
               Book an appointment
             </Link>
@@ -252,7 +289,10 @@ function Dashboard() {
                   <h2>Upcoming appointments</h2>
                 </div>
 
-                <Link to="/book-appointment" className="dashboard-card-link">
+                <Link
+                  to="/book-appointment"
+                  className="dashboard-card-link"
+                >
                   New appointment →
                 </Link>
               </div>
@@ -394,7 +434,9 @@ function Dashboard() {
             <section className="dashboard-card history-card">
               <div className="dashboard-card-header">
                 <div>
-                  <p className="dashboard-card-kicker">APPOINTMENT HISTORY</p>
+                  <p className="dashboard-card-kicker">
+                    APPOINTMENT HISTORY
+                  </p>
                   <h2>Your recent appointments</h2>
                 </div>
               </div>
@@ -431,7 +473,9 @@ function Dashboard() {
       <footer className="dashboard-footer">
         <div>
           <strong>AL-AZHAR MEDICAL LAB</strong>
-          <span>Reliable laboratory services in Cherchell, Algeria.</span>
+          <span>
+            Reliable laboratory services in Cherchell, Algeria.
+          </span>
         </div>
 
         <div>

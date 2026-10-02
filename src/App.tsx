@@ -5,6 +5,8 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import LabAI from './pages/LabAI'
 import './App.css'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminRoute from './pages/admin/AdminRoute'
 
 const services = [
   {
@@ -409,6 +411,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/lab-ai/*" element={<LabAI />} />
       </Routes>

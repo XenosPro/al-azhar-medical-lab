@@ -1,0 +1,237 @@
+
+.admin-page {
+  min-height: 100vh;
+  background: #f4f7f9;
+  color: #12212b;
+  padding: 48px;
+}
+
+.admin-header {
+  max-width: 1400px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #147d88;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.04em;
+}
+
+.admin-header p {
+  margin: 10px 0 0;
+  color: #6d7b84;
+}
+
+.admin-refresh {
+  border: 1px solid #d4dfe4;
+  background: #ffffff;
+  color: #12212b;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-refresh:hover {
+  background: #eef4f6;
+}
+
+.admin-stats {
+  max-width: 1400px;
+  margin: 0 auto 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.admin-stat {
+  background: #ffffff;
+  border: 1px solid #e1e9ed;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.admin-stat span {
+  display: block;
+  color: #71808a;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.admin-stat strong {
+  font-size: 2rem;
+}
+
+.admin-table-card {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e1e9ed;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.admin-table-header {
+  padding: 26px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e8eef1;
+}
+
+.admin-table-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.appointment-count {
+  color: #71808a;
+  font-size: 0.9rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-page table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.admin-page th {
+  text-align: left;
+  padding: 15px 20px;
+  background: #f8fafb;
+  color: #71808a;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-page td {
+  padding: 18px 20px;
+  border-top: 1px solid #edf1f3;
+  font-size: 0.9rem;
+}
+
+.patient-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.patient-cell strong {
+  color: #172a35;
+}
+
+.patient-cell small {
+  color: #7c8991;
+}
+
+.appointment-type {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.appointment-type.guest {
+  background: #fff4e5;
+  color: #a45b00;
+}
+
+.appointment-type.registered {
+  background: #e8f6f3;
+  color: #147d72;
+}
+
+.status-select {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.status-pending {
+  background: #fff4d6;
+  color: #956900;
+}
+
+.status-confirmed {
+  background: #e5f6eb;
+  color: #217443;
+}
+
+.status-cancelled {
+  background: #fde9e9;
+  color: #a33a3a;
+}
+
+.empty-state {
+  padding: 70px 30px;
+  text-align: center;
+}
+
+.empty-state strong {
+  font-size: 1.2rem;
+}
+
+.empty-state p {
+  color: #71808a;
+}
+
+.admin-loading {
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+  color: #71808a;
+}
+
+.admin-error {
+  max-width: 1400px;
+  margin: 0 auto 24px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: #fdecec;
+  color: #9b3333;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 800px) {
+  .admin-page {
+    padding: 24px 16px;
+  }
+
+  .admin-header {
+    flex-direction: column;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+}
