@@ -322,8 +322,8 @@ export default function LabAI() {
 
                 <h2>
                   {result.prediction === 'ckd'
-                    ? 'Model-indicated CKD screening result'
-                    : 'Model-indicated non-CKD screening result'}
+                    ? 'Model-indicated CKD screening: Positive'
+                    : 'Model-indicated CKD screening: Negative'}
                 </h2>
 
                 <div className="ai-probabilities">
@@ -337,7 +337,11 @@ export default function LabAI() {
                           className="ai-probability"
                         >
                           <div>
-                            <span>{label.toUpperCase()}</span>
+                            <span>
+                              {label === 'ckd'
+                                ? 'CKD'
+                                : 'NOT CKD'}
+                            </span>
 
                             <strong>
                               {Math.round(probability * 100)}%
@@ -358,7 +362,15 @@ export default function LabAI() {
                 </div>
 
                 <p className="ai-result-message">
-                  {result.message}
+                  {result.prediction === 'ckd'
+                    ? 'The model detected a pattern associated with CKD in the submitted laboratory data.'
+                    : 'The model did not detect a strong pattern associated with CKD in the submitted laboratory data.'}
+                </p>
+
+                <p className="ai-disclaimer">
+                  This result is for screening support only and is not a
+                  medical diagnosis. It should be reviewed by a qualified
+                  healthcare professional.
                 </p>
 
                 <button
