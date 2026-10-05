@@ -226,13 +226,23 @@ function Dashboard() {
               </p>
             </div>
 
-            <Link
-              to="/book-appointment"
-              className="dashboard-primary-button"
-            >
-              <span>+</span>
-              Book an appointment
-            </Link>
+            <div className="dashboard-primary-actions">
+              <Link
+                to="/book-appointment"
+                className="dashboard-primary-button"
+              >
+                <span>+</span>
+                Book an appointment
+              </Link>
+
+              <Link
+                to="/lab-ai"
+                className="dashboard-ai-button"
+              >
+                <span>✦</span>
+                AI CKD Screening
+              </Link>
+            </div>
           </section>
 
           <section className="dashboard-stat-grid">
