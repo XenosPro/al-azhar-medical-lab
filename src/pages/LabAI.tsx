@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState, type FormEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 import './LabAI.css'
 
 const API_URL =
@@ -83,10 +84,33 @@ function toNumber(value: string) {
 }
 
 export default function LabAI() {
+  const navigate = useNavigate()
+
+  const [authChecking, setAuthChecking] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   const [form, setForm] = useState(initialForm)
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    async function checkAuth() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) {
+        navigate('/login', { replace: true })
+        return
+      }
+
+      setIsAuthenticated(true)
+      setAuthChecking(false)
+    }
+
+    checkAuth()
+  }, [navigate])
 
   function update(name: FormField, value: string) {
     setForm((current) => ({
@@ -183,6 +207,20 @@ export default function LabAI() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (authChecking) {
+    return (
+      <main className="ai-page">
+        <div className="container">
+          <p>Checking your access…</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return null
   }
 
   return (
@@ -311,7 +349,7 @@ export default function LabAI() {
                 </p>
 
                 <small>
-                  Check the FastAPI terminal for the request details.
+                  Check the AI service logs for the request details.
                 </small>
               </div>
             )}
