@@ -15,8 +15,14 @@ type Appointment = {
   created_at: string
 }
 
+type PatientName = {
+  user_id: string
+  full_name: string
+}
+
 function AdminDashboard() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [patientNames, setPatientNames] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -30,10 +36,54 @@ function AdminDashboard() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error(error)
+      console.error('Appointments error:', error)
       setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    const loadedAppointments = data || []
+
+    setAppointments(loadedAppointments)
+
+    const userIds = Array.from(
+      new Set(
+        loadedAppointments
+          .map((appointment) => appointment.user_id)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    )
+
+    console.log('Patient IDs:', userIds)
+
+    if (userIds.length > 0) {
+      const { data: patients, error: patientError } =
+        await supabase.rpc('get_patient_names', {
+          user_ids: userIds,
+        })
+
+      console.log('Patient names:', patients)
+      console.log('Patient name error:', patientError)
+
+      if (patientError) {
+        console.error('Patient names RPC error:', patientError)
+        setError(patientError.message)
+      } else {
+        const names: Record<string, string> = {}
+
+        const patientList = (patients || []) as PatientName[]
+
+        patientList.forEach((patient) => {
+          names[patient.user_id] = patient.full_name
+        })
+
+        console.log('Patient names map:', names)
+
+        setPatientNames(names)
+      }
     } else {
-      setAppointments(data || [])
+      console.log('No registered patient IDs found.')
+      setPatientNames({})
     }
 
     setLoading(false)
@@ -177,13 +227,23 @@ function AdminDashboard() {
 
               <tbody>
                 {appointments.map((appointment) => {
-                  const patientName =
-                    appointment.guest_name ||
-                    (appointment.user_id
-                      ? 'Registered patient'
-                      : 'Unknown patient')
-
                   const isGuest = !appointment.user_id
+
+                  let patientName = 'Unknown patient'
+
+                  if (isGuest) {
+                    patientName =
+                      appointment.guest_name ||
+                      'Unknown patient'
+                  } else if (
+                    appointment.user_id &&
+                    patientNames[appointment.user_id]
+                  ) {
+                    patientName =
+                      patientNames[appointment.user_id]
+                  } else {
+                    patientName = 'Registered patient'
+                  }
 
                   return (
                     <tr key={appointment.id}>
@@ -258,3 +318,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard
+
