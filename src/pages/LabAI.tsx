@@ -15,6 +15,15 @@ type ScreeningResult = {
   message: string;
 };
 
+type ReferenceItem = {
+  key: string;
+  label: string;
+  description: string;
+  type: string;
+  reference: string;
+  unit: string;
+};
+
 const initialForm: FormState = {
   age: "",
   bp: "",
@@ -98,6 +107,235 @@ const options: Record<string, string[]> = {
   pe: ["yes", "no"],
   ane: ["yes", "no"],
 };
+
+const referenceGroups: {
+  title: string;
+  description: string;
+  items: ReferenceItem[];
+}[] = [
+  {
+    title: "Patient information",
+    description: "Basic measurements used by the model.",
+    items: [
+      {
+        key: "age",
+        label: "Age",
+        description: "Patient age",
+        type: "Numeric",
+        reference: "Age-dependent",
+        unit: "years",
+      },
+      {
+        key: "bp",
+        label: "Blood pressure",
+        description: "Blood pressure measurement",
+        type: "Numeric",
+        reference: "Context-dependent",
+        unit: "mmHg",
+      },
+    ],
+  },
+  {
+    title: "Urinalysis",
+    description: "Findings obtained from urine analysis.",
+    items: [
+      {
+        key: "sg",
+        label: "Specific gravity",
+        description: "Urine concentration",
+        type: "Dataset-coded",
+        reference: "1.005–1.025",
+        unit: "",
+      },
+      {
+        key: "al",
+        label: "Albumin",
+        description: "Urinary albumin finding",
+        type: "Ordinal",
+        reference: "0–5 in dataset",
+        unit: "grade",
+      },
+      {
+        key: "su",
+        label: "Sugar",
+        description: "Urinary sugar finding",
+        type: "Ordinal",
+        reference: "0–5 in dataset",
+        unit: "grade",
+      },
+      {
+        key: "rbc",
+        label: "Red blood cells",
+        description: "RBC finding in urine",
+        type: "Categorical",
+        reference: "Normal",
+        unit: "",
+      },
+      {
+        key: "pc",
+        label: "Pus cells",
+        description: "Pus-cell finding in urine",
+        type: "Categorical",
+        reference: "Normal",
+        unit: "",
+      },
+      {
+        key: "pcc",
+        label: "Pus cell clumps",
+        description: "Presence of pus-cell clumps",
+        type: "Categorical",
+        reference: "Not present",
+        unit: "",
+      },
+      {
+        key: "ba",
+        label: "Bacteria",
+        description: "Bacterial finding in urine",
+        type: "Categorical",
+        reference: "Not present",
+        unit: "",
+      },
+    ],
+  },
+  {
+    title: "Blood chemistry",
+    description: "Biochemical measurements obtained from blood analysis.",
+    items: [
+      {
+        key: "bgr",
+        label: "Blood glucose",
+        description: "Blood glucose measurement",
+        type: "Numeric",
+        reference: "Context-dependent",
+        unit: "mg/dL",
+      },
+      {
+        key: "bu",
+        label: "Blood urea",
+        description: "Blood urea measurement",
+        type: "Numeric",
+        reference: "Lab-dependent",
+        unit: "mg/dL",
+      },
+      {
+        key: "sc",
+        label: "Serum creatinine",
+        description: "Creatinine concentration in blood",
+        type: "Numeric",
+        reference: "Approx. 0.6–1.3",
+        unit: "mg/dL",
+      },
+      {
+        key: "sod",
+        label: "Sodium",
+        description: "Serum sodium concentration",
+        type: "Numeric",
+        reference: "135–145",
+        unit: "mEq/L",
+      },
+      {
+        key: "pot",
+        label: "Potassium",
+        description: "Serum potassium concentration",
+        type: "Numeric",
+        reference: "3.7–5.2",
+        unit: "mEq/L",
+      },
+    ],
+  },
+  {
+    title: "Hematology",
+    description: "Blood cell and hemoglobin measurements.",
+    items: [
+      {
+        key: "hemo",
+        label: "Hemoglobin",
+        description: "Hemoglobin concentration",
+        type: "Numeric",
+        reference: "Male 13.8–17.2 / Female 12.1–15.1",
+        unit: "g/dL",
+      },
+      {
+        key: "pcv",
+        label: "Packed cell volume",
+        description: "Percentage of blood occupied by red cells",
+        type: "Numeric",
+        reference: "Adult range varies",
+        unit: "%",
+      },
+      {
+        key: "wbcc",
+        label: "White blood cell count",
+        description: "Number of white blood cells",
+        type: "Numeric",
+        reference: "Typically 4,000–11,000",
+        unit: "cells/µL",
+      },
+      {
+        key: "rbcc",
+        label: "Red blood cell count",
+        description: "Number of red blood cells",
+        type: "Numeric",
+        reference: "Male 4.2–5.7 / Female 3.8–5.1",
+        unit: "million/µL",
+      },
+    ],
+  },
+  {
+    title: "Clinical history",
+    description: "Patient clinical variables used by the model.",
+    items: [
+      {
+        key: "htn",
+        label: "Hypertension",
+        description: "History/presence of hypertension",
+        type: "Categorical",
+        reference: "Yes / No",
+        unit: "",
+      },
+      {
+        key: "dm",
+        label: "Diabetes mellitus",
+        description: "History/presence of diabetes",
+        type: "Categorical",
+        reference: "Yes / No",
+        unit: "",
+      },
+      {
+        key: "cad",
+        label: "Coronary artery disease",
+        description: "History/presence of CAD",
+        type: "Categorical",
+        reference: "Yes / No",
+        unit: "",
+      },
+      {
+        key: "appet",
+        label: "Appetite",
+        description: "Reported appetite status",
+        type: "Categorical",
+        reference: "Good / Poor",
+        unit: "",
+      },
+      {
+        key: "pe",
+        label: "Pedal edema",
+        description: "Presence of pedal edema",
+        type: "Categorical",
+        reference: "Yes / No",
+        unit: "",
+      },
+      {
+        key: "ane",
+        label: "Anemia",
+        description: "Presence/history of anemia",
+        type: "Categorical",
+        reference: "Yes / No",
+        unit: "",
+      },
+    ],
+  },
+];
 
 function toNumber(value: string) {
   if (value.trim() === "") return null;
@@ -323,7 +561,7 @@ export default function LabAI() {
 
               <div className="lab-ai-hero-tags">
                 <span>Random Forest</span>
-                <span>24 laboratory features</span>
+                <span>24 model features</span>
                 <span>CKD screening</span>
               </div>
             </div>
@@ -371,8 +609,6 @@ export default function LabAI() {
           </div>
 
           <div className="ai-pipeline">
-            {/* INPUT */}
-
             <article className="ai-pipeline-card">
               <div className="ai-pipeline-icon">01</div>
 
@@ -398,8 +634,6 @@ export default function LabAI() {
             </article>
 
             <div className="ai-pipeline-arrow">→</div>
-
-            {/* PROCESSING */}
 
             <article className="ai-pipeline-card">
               <div className="ai-pipeline-icon">02</div>
@@ -435,8 +669,6 @@ export default function LabAI() {
 
             <div className="ai-pipeline-arrow">→</div>
 
-            {/* MODEL */}
-
             <article className="ai-pipeline-card ai-pipeline-model">
               <div className="ai-pipeline-icon">03</div>
 
@@ -467,8 +699,6 @@ export default function LabAI() {
             </article>
 
             <div className="ai-pipeline-arrow">→</div>
-
-            {/* OUTPUT */}
 
             <article className="ai-pipeline-card ai-pipeline-output">
               <div className="ai-pipeline-icon">04</div>
@@ -524,8 +754,6 @@ export default function LabAI() {
             </div>
 
             <div className="ai-forest-stage">
-              {/* INPUT */}
-
               <div className="ai-forest-input">
                 <span>LABORATORY DATA</span>
 
@@ -542,8 +770,6 @@ export default function LabAI() {
               </div>
 
               <div className="ai-forest-connector">→</div>
-
-              {/* RANDOM FOREST */}
 
               <div className="ai-forest-center">
                 <div className="ai-forest-model-card">
@@ -600,8 +826,6 @@ export default function LabAI() {
               </div>
 
               <div className="ai-forest-connector">→</div>
-
-              {/* OUTPUT */}
 
               <div className="ai-forest-output">
                 <span>MODEL OUTPUT</span>
@@ -674,6 +898,86 @@ export default function LabAI() {
             </div>
           </div>
 
+          {/* =====================================================
+              REFERENCE INTERVALS
+              ===================================================== */}
+
+          <div className="ai-reference-section">
+            <div className="ai-reference-heading">
+              <div>
+                <span className="ai-section-label">
+                  REFERENCE INFORMATION
+                </span>
+
+                <h3>Reference intervals & expected values</h3>
+              </div>
+
+              <p>
+                The 24 model features come from laboratory measurements,
+                urinalysis findings, and clinical information. Reference
+                values provide context for the measurements but do not
+                determine the model prediction by themselves.
+              </p>
+            </div>
+
+            <div className="ai-reference-groups">
+              {referenceGroups.map((group) => (
+                <section
+                  className="ai-reference-group"
+                  key={group.title}
+                >
+                  <div className="ai-reference-group-heading">
+                    <h4>{group.title}</h4>
+                    <p>{group.description}</p>
+                  </div>
+
+                  <div className="ai-reference-table">
+                    <div className="ai-reference-row ai-reference-header">
+                      <span>Feature</span>
+                      <span>Description</span>
+                      <span>Type</span>
+                      <span>Reference / expected</span>
+                      <span>Unit</span>
+                    </div>
+
+                    {group.items.map((item) => (
+                      <div
+                        className="ai-reference-row"
+                        key={item.key}
+                      >
+                        <strong>{item.label}</strong>
+
+                        <span>{item.description}</span>
+
+                        <span className="ai-reference-type">
+                          {item.type}
+                        </span>
+
+                        <span className="ai-reference-value">
+                          {item.reference}
+                        </span>
+
+                        <span>{item.unit || "—"}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            <div className="ai-reference-note">
+              <span>i</span>
+
+              <p>
+                <strong>Important:</strong> reference intervals can vary by
+                laboratory, measurement method, age, sex, clinical context,
+                and other factors. Always use the reference range printed
+                on the patient's laboratory report when interpreting an
+                actual result.
+              </p>
+            </div>
+          </div>
+
           {/* DISCLAIMER */}
 
           <div className="ai-explainer-note">
@@ -708,8 +1012,6 @@ export default function LabAI() {
           </div>
 
           <form className="lab-ai-form" onSubmit={submit}>
-            {/* PATIENT INFORMATION */}
-
             <section className="lab-form-card">
               <div className="lab-form-card-heading">
                 <span>01</span>
@@ -725,8 +1027,6 @@ export default function LabAI() {
                 {renderNumberField("bp")}
               </div>
             </section>
-
-            {/* URINALYSIS */}
 
             <section className="lab-form-card">
               <div className="lab-form-card-heading">
@@ -749,8 +1049,6 @@ export default function LabAI() {
               </div>
             </section>
 
-            {/* BLOOD CHEMISTRY */}
-
             <section className="lab-form-card">
               <div className="lab-form-card-heading">
                 <span>03</span>
@@ -770,8 +1068,6 @@ export default function LabAI() {
               </div>
             </section>
 
-            {/* HEMATOLOGY */}
-
             <section className="lab-form-card">
               <div className="lab-form-card-heading">
                 <span>04</span>
@@ -789,8 +1085,6 @@ export default function LabAI() {
                 {renderNumberField("rbcc")}
               </div>
             </section>
-
-            {/* CLINICAL HISTORY */}
 
             <section className="lab-form-card">
               <div className="lab-form-card-heading">
