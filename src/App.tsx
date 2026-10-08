@@ -7,6 +7,7 @@ import LabAI from './pages/LabAI'
 import './App.css'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminRoute from './pages/admin/AdminRoute'
+import HeroSlideshow from './components/HeroSlideshow'
 
 const services = [
   {
@@ -118,58 +119,34 @@ function Home() {
             <div className="hero-trust">
               <div className="trust-item">
                 <strong>01</strong>
-                <span>Professional<br />Laboratory Testing</span>
+                <span>
+                  Professional
+                  <br />
+                  Laboratory Testing
+                </span>
               </div>
 
               <div className="trust-item">
                 <strong>02</strong>
-                <span>Clear Patient<br />Experience</span>
+                <span>
+                  Clear Patient
+                  <br />
+                  Experience
+                </span>
               </div>
 
               <div className="trust-item">
                 <strong>03</strong>
-                <span>Direct Laboratory<br />Contact</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-visual">
-            <div className="lab-card hero-photo-card">
-              <img
-                className="hero-photo"
-                src="https://images.pexels.com/photos/8442147/pexels-photo-8442147.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Medical professional working in a modern laboratory"
-              />
-              <div className="hero-photo-overlay" />
-              <div className="card-top">
-                <span className="card-label">AL-AZHAR MEDICAL LAB</span>
-                <span className="live-indicator">
-                  <i />
-                  LABORATORY
+                <span>
+                  Direct Laboratory
+                  <br />
+                  Contact
                 </span>
               </div>
-              <div className="hero-photo-caption">
-                <strong>Modern laboratory care</strong>
-                <span>Professional testing in Cherchell</span>
-              </div>
-            </div>
-
-            <div className="floating-card result-card">
-              <span className="result-icon">✓</span>
-              <div>
-                <strong>Patient focused</strong>
-                <small>Simple &amp; clear process</small>
-              </div>
-            </div>
-
-            <div className="floating-card accuracy-card">
-              <span className="result-icon">+</span>
-              <div>
-                <strong>Laboratory care</strong>
-                <small>Testing &amp; diagnostics</small>
-              </div>
             </div>
           </div>
+
+          <HeroSlideshow />
         </div>
       </section>
 
@@ -346,10 +323,7 @@ function Home() {
           </div>
 
           <div className="cta-actions">
-            <a
-              href="tel:+213671333371"
-              className="primary-button light"
-            >
+            <a href="tel:+213671333371" className="primary-button light">
               Call 0671 33 33 71
               <span>→</span>
             </a>
