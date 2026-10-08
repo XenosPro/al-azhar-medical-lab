@@ -15,15 +15,6 @@ type ScreeningResult = {
   message: string;
 };
 
-type ReferenceItem = {
-  key: string;
-  label: string;
-  description: string;
-  type: string;
-  reference: string;
-  unit: string;
-};
-
 const initialForm: FormState = {
   age: "",
   bp: "",
@@ -95,6 +86,26 @@ const fieldLabels: Record<string, string> = {
   ane: "Anemia",
 };
 
+/*
+ * Compact reference hints displayed below applicable fields.
+ * These are contextual examples, not diagnostic cutoffs.
+ */
+const referenceHints: Record<string, string> = {
+  bp: "Blood pressure varies with age and clinical context.",
+  sg: "Dataset values: 1.005–1.025.",
+  al: "Dataset grades: 0–5.",
+  su: "Dataset grades: 0–5.",
+  bgr: "Fasting adult glucose is typically 70–99 mg/dL.",
+  bu: "Reference range depends on the laboratory and method.",
+  sc: "Typical adult range: approximately 0.6–1.3 mg/dL.",
+  sod: "Typical range: 135–145 mEq/L.",
+  pot: "Typical range: 3.7–5.2 mEq/L.",
+  hemo: "Typical adult range varies by sex: approximately 12.1–17.2 g/dL.",
+  pcv: "Adult reference range varies by sex and laboratory.",
+  wbcc: "Typical range: 4,000–11,000 cells/µL.",
+  rbcc: "Typical adult range varies by sex: approximately 3.8–5.7 million/µL.",
+};
+
 const options: Record<string, string[]> = {
   rbc: ["normal", "abnormal"],
   pc: ["normal", "abnormal"],
@@ -107,235 +118,6 @@ const options: Record<string, string[]> = {
   pe: ["yes", "no"],
   ane: ["yes", "no"],
 };
-
-const referenceGroups: {
-  title: string;
-  description: string;
-  items: ReferenceItem[];
-}[] = [
-  {
-    title: "Patient information",
-    description: "Basic measurements used by the model.",
-    items: [
-      {
-        key: "age",
-        label: "Age",
-        description: "Patient age",
-        type: "Numeric",
-        reference: "Age-dependent",
-        unit: "years",
-      },
-      {
-        key: "bp",
-        label: "Blood pressure",
-        description: "Blood pressure measurement",
-        type: "Numeric",
-        reference: "Context-dependent",
-        unit: "mmHg",
-      },
-    ],
-  },
-  {
-    title: "Urinalysis",
-    description: "Findings obtained from urine analysis.",
-    items: [
-      {
-        key: "sg",
-        label: "Specific gravity",
-        description: "Urine concentration",
-        type: "Dataset-coded",
-        reference: "1.005–1.025",
-        unit: "",
-      },
-      {
-        key: "al",
-        label: "Albumin",
-        description: "Urinary albumin finding",
-        type: "Ordinal",
-        reference: "0–5 in dataset",
-        unit: "grade",
-      },
-      {
-        key: "su",
-        label: "Sugar",
-        description: "Urinary sugar finding",
-        type: "Ordinal",
-        reference: "0–5 in dataset",
-        unit: "grade",
-      },
-      {
-        key: "rbc",
-        label: "Red blood cells",
-        description: "RBC finding in urine",
-        type: "Categorical",
-        reference: "Normal",
-        unit: "",
-      },
-      {
-        key: "pc",
-        label: "Pus cells",
-        description: "Pus-cell finding in urine",
-        type: "Categorical",
-        reference: "Normal",
-        unit: "",
-      },
-      {
-        key: "pcc",
-        label: "Pus cell clumps",
-        description: "Presence of pus-cell clumps",
-        type: "Categorical",
-        reference: "Not present",
-        unit: "",
-      },
-      {
-        key: "ba",
-        label: "Bacteria",
-        description: "Bacterial finding in urine",
-        type: "Categorical",
-        reference: "Not present",
-        unit: "",
-      },
-    ],
-  },
-  {
-    title: "Blood chemistry",
-    description: "Biochemical measurements obtained from blood analysis.",
-    items: [
-      {
-        key: "bgr",
-        label: "Blood glucose",
-        description: "Blood glucose measurement",
-        type: "Numeric",
-        reference: "Context-dependent",
-        unit: "mg/dL",
-      },
-      {
-        key: "bu",
-        label: "Blood urea",
-        description: "Blood urea measurement",
-        type: "Numeric",
-        reference: "Lab-dependent",
-        unit: "mg/dL",
-      },
-      {
-        key: "sc",
-        label: "Serum creatinine",
-        description: "Creatinine concentration in blood",
-        type: "Numeric",
-        reference: "Approx. 0.6–1.3",
-        unit: "mg/dL",
-      },
-      {
-        key: "sod",
-        label: "Sodium",
-        description: "Serum sodium concentration",
-        type: "Numeric",
-        reference: "135–145",
-        unit: "mEq/L",
-      },
-      {
-        key: "pot",
-        label: "Potassium",
-        description: "Serum potassium concentration",
-        type: "Numeric",
-        reference: "3.7–5.2",
-        unit: "mEq/L",
-      },
-    ],
-  },
-  {
-    title: "Hematology",
-    description: "Blood cell and hemoglobin measurements.",
-    items: [
-      {
-        key: "hemo",
-        label: "Hemoglobin",
-        description: "Hemoglobin concentration",
-        type: "Numeric",
-        reference: "Male 13.8–17.2 / Female 12.1–15.1",
-        unit: "g/dL",
-      },
-      {
-        key: "pcv",
-        label: "Packed cell volume",
-        description: "Percentage of blood occupied by red cells",
-        type: "Numeric",
-        reference: "Adult range varies",
-        unit: "%",
-      },
-      {
-        key: "wbcc",
-        label: "White blood cell count",
-        description: "Number of white blood cells",
-        type: "Numeric",
-        reference: "Typically 4,000–11,000",
-        unit: "cells/µL",
-      },
-      {
-        key: "rbcc",
-        label: "Red blood cell count",
-        description: "Number of red blood cells",
-        type: "Numeric",
-        reference: "Male 4.2–5.7 / Female 3.8–5.1",
-        unit: "million/µL",
-      },
-    ],
-  },
-  {
-    title: "Clinical history",
-    description: "Patient clinical variables used by the model.",
-    items: [
-      {
-        key: "htn",
-        label: "Hypertension",
-        description: "History/presence of hypertension",
-        type: "Categorical",
-        reference: "Yes / No",
-        unit: "",
-      },
-      {
-        key: "dm",
-        label: "Diabetes mellitus",
-        description: "History/presence of diabetes",
-        type: "Categorical",
-        reference: "Yes / No",
-        unit: "",
-      },
-      {
-        key: "cad",
-        label: "Coronary artery disease",
-        description: "History/presence of CAD",
-        type: "Categorical",
-        reference: "Yes / No",
-        unit: "",
-      },
-      {
-        key: "appet",
-        label: "Appetite",
-        description: "Reported appetite status",
-        type: "Categorical",
-        reference: "Good / Poor",
-        unit: "",
-      },
-      {
-        key: "pe",
-        label: "Pedal edema",
-        description: "Presence of pedal edema",
-        type: "Categorical",
-        reference: "Yes / No",
-        unit: "",
-      },
-      {
-        key: "ane",
-        label: "Anemia",
-        description: "Presence/history of anemia",
-        type: "Categorical",
-        reference: "Yes / No",
-        unit: "",
-      },
-    ],
-  },
-];
 
 function toNumber(value: string) {
   if (value.trim() === "") return null;
@@ -405,7 +187,9 @@ export default function LabAI() {
     const output: Record<string, string | number | null> = {};
 
     Object.entries(form).forEach(([key, value]) => {
-      output[key] = numericFields.has(key) ? toNumber(value) : value || null;
+      output[key] = numericFields.has(key)
+        ? toNumber(value)
+        : value || null;
     });
 
     return output;
@@ -436,11 +220,14 @@ export default function LabAI() {
             .filter(Boolean)
             .join(" ");
 
-          throw new Error(validationMessage || "Invalid laboratory data.");
+          throw new Error(
+            validationMessage || "Invalid laboratory data.",
+          );
         }
 
         throw new Error(
-          data?.detail || "The AI service could not process the request.",
+          data?.detail ||
+            "The AI service could not process the request.",
         );
       }
 
@@ -491,9 +278,17 @@ export default function LabAI() {
         type="number"
         step="any"
         value={form[name]}
-        onChange={(event) => updateField(name, event.target.value)}
+        onChange={(event) =>
+          updateField(name, event.target.value)
+        }
         placeholder="Optional"
       />
+
+      {referenceHints[name] && (
+        <small className="lab-field-hint">
+          {referenceHints[name]}
+        </small>
+      )}
     </label>
   );
 
@@ -503,7 +298,9 @@ export default function LabAI() {
 
       <select
         value={form[name]}
-        onChange={(event) => updateField(name, event.target.value)}
+        onChange={(event) =>
+          updateField(name, event.target.value)
+        }
       >
         <option value="">Not provided</option>
 
@@ -529,473 +326,342 @@ export default function LabAI() {
 
   return (
     <main className="lab-ai-page">
-      {/* =====================================================
-          HERO
-          ===================================================== */}
+      ```
+ 
+      
+{/* HERO — PROFESSIONAL MEDICAL AI */}
+<section className="lab-ai-hero lab-ai-hero-v3">
+  <div className="lab-ai-v3-glow" aria-hidden="true" />
 
-      <section className="lab-ai-hero">
-        <div className="lab-ai-container">
-          <div className="lab-ai-breadcrumb">
-            <Link to="/">Home</Link>
-            <span>/</span>
-            <span>Lab AI</span>
+  <div className="lab-ai-container lab-ai-v3-container">
+    <nav className="lab-ai-v3-breadcrumb" aria-label="Breadcrumb">
+      <Link to="/">Home</Link>
+      <span aria-hidden="true">/</span>
+      <span>Laboratory AI</span>
+    </nav>
+
+    <div className="lab-ai-v3-layout">
+      <div className="lab-ai-v3-copy">
+        <div className="lab-ai-v3-eyebrow">
+          <span className="lab-ai-v3-eyebrow-mark" />
+          CLINICAL INTELLIGENCE PLATFORM
+        </div>
+
+        <h1 className="lab-ai-v3-title">
+          Laboratory data.
+          <br />
+          <span>Intelligent screening.</span>
+        </h1>
+
+        <p className="lab-ai-v3-description">
+          Transform laboratory and clinical parameters into
+          machine-learning insights to support chronic kidney
+          disease screening.
+        </p>
+
+        <div className="lab-ai-v3-divider" />
+
+        <div className="lab-ai-v3-capabilities">
+          <div className="lab-ai-v3-capability">
+            <span className="lab-ai-v3-check" aria-hidden="true">✓</span>
+            <span>Random Forest model</span>
           </div>
 
-          <div className="lab-ai-hero-content">
-            <div>
-              <span className="lab-ai-eyebrow">
-                LABORATORY INTELLIGENCE
-              </span>
+          <div className="lab-ai-v3-capability">
+            <span className="lab-ai-v3-check" aria-hidden="true">✓</span>
+            <span>24 laboratory and clinical features</span>
+          </div>
 
-              <h1>
-                Laboratory data.
-                <br />
-                <span>Machine-learning support.</span>
-              </h1>
-
-              <p>
-                Submit laboratory and clinical parameters to receive a
-                model-indicated CKD screening result powered by a trained
-                Random Forest classifier.
-              </p>
-
-              <div className="lab-ai-hero-tags">
-                <span>Random Forest</span>
-                <span>24 model features</span>
-                <span>CKD screening</span>
-              </div>
-            </div>
-
-            <div className="lab-ai-hero-card">
-              <div className="lab-ai-hero-card-top">
-                <span>MODEL STATUS</span>
-                <i />
-                <strong>Ready</strong>
-              </div>
-
-              <div className="lab-ai-hero-card-line" />
-
-              <div className="lab-ai-hero-card-bottom">
-                <span>Output</span>
-                <strong>Screening probability</strong>
-              </div>
-            </div>
+          <div className="lab-ai-v3-capability">
+            <span className="lab-ai-v3-check" aria-hidden="true">✓</span>
+            <span>Probability-based screening output</span>
           </div>
         </div>
-      </section>
 
-      {/* =====================================================
-          VISUAL EXPLANATION
-          ===================================================== */}
+        <p className="lab-ai-v3-note">
+          <span aria-hidden="true">ⓘ</span>
+          For screening support only. Not a medical diagnosis.
+        </p>
+      </div>
 
-      <section className="ai-explainer">
+      <aside
+        className="lab-ai-v3-panel"
+        aria-label="Screening workflow overview"
+      >
+        <div className="lab-ai-v3-panel-top">
+          <div className="lab-ai-v3-emblem" aria-hidden="true">
+            <svg
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 7h12M21 7v12L11 35a4 4 0 0 0 3.5 6h19a4 4 0 0 0 3.5-6L27 19V7"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M16 31h16M19 25h10"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <circle cx="24" cy="35" r="2" fill="currentColor" />
+            </svg>
+          </div>
+
+          <span className="lab-ai-v3-panel-index">
+            AI / 01
+          </span>
+        </div>
+
+        <span className="lab-ai-v3-panel-label">
+          SCREENING WORKFLOW
+        </span>
+
+        <h2 className="lab-ai-v3-panel-title">
+          Laboratory intelligence
+        </h2>
+
+        <p className="lab-ai-v3-panel-description">
+          A machine-learning approach to interpreting
+          structured laboratory and clinical data.
+        </p>
+
+        <div className="lab-ai-v3-workflow">
+          <div className="lab-ai-v3-workflow-step">
+            <span className="lab-ai-v3-step-number">01</span>
+            <div>
+              <strong>Clinical inputs</strong>
+              <span>Laboratory and patient parameters</span>
+            </div>
+            <span className="lab-ai-v3-step-dot" />
+          </div>
+
+          <div className="lab-ai-v3-workflow-step">
+            <span className="lab-ai-v3-step-number">02</span>
+            <div>
+              <strong>Model processing</strong>
+              <span>Random Forest classification</span>
+            </div>
+            <span className="lab-ai-v3-step-dot" />
+          </div>
+
+          <div className="lab-ai-v3-workflow-step">
+            <span className="lab-ai-v3-step-number">03</span>
+            <div>
+              <strong>Screening output</strong>
+              <span>Predicted class and probabilities</span>
+            </div>
+            <span className="lab-ai-v3-step-dot" />
+          </div>
+        </div>
+
+        <div className="lab-ai-v3-panel-footer">
+          <span className="lab-ai-v3-info-icon" aria-hidden="true">i</span>
+          <span>Decision-support information, not a diagnosis.</span>
+        </div>
+      </aside>
+    </div>
+
+    <div className="lab-ai-v3-bottom-line">
+      <span>AL-AZHAR MEDICAL LABORATORY</span>
+      <span>LABORATORY AI <span aria-hidden="true">/</span> CKD SCREENING</span>
+    </div>
+  </div>
+</section>
+```
+
+
+      
+      {/* MODEL EXPLANATION */}
+      <section className="ai-explainer ai-redesign">
         <div className="ai-container">
-          <div className="ai-explainer-heading">
-            <div>
-              <span className="ai-section-label">
-                UNDERSTANDING THE MODEL
-              </span>
+          <header className="ai-redesign-heading">
+            <span className="ai-section-label">
+              UNDERSTANDING THE MODEL
+            </span>
 
-              <h2>
-                How your laboratory data becomes an AI screening result
-              </h2>
-            </div>
+            <h2>From laboratory data to AI screening</h2>
 
             <p>
-              The system follows a machine-learning pipeline. Your
-              laboratory values are transformed into a format the trained
-              Random Forest model can evaluate.
+              Explore how laboratory measurements move through the
+              machine-learning pipeline to produce a model-indicated
+              CKD screening result.
             </p>
-          </div>
+          </header>
 
-          <div className="ai-pipeline">
-            <article className="ai-pipeline-card">
-              <div className="ai-pipeline-icon">01</div>
+          <div className="ai-redesign-steps">
+            <article className="ai-redesign-step">
+              <span className="ai-redesign-number">01</span>
+              <span className="ai-redesign-kicker">INPUT</span>
+              <h3>Laboratory data</h3>
+              <p>
+                Patient measurements, blood tests, urinalysis and
+                clinical history.
+              </p>
 
-              <div className="ai-pipeline-content">
-                <span>INPUT</span>
-
-                <h3>Laboratory data</h3>
-
-                <div className="ai-data-chips">
-                  <span>Blood pressure</span>
-                  <span>Creatinine</span>
-                  <span>Hemoglobin</span>
-                  <span>Glucose</span>
-                  <span>Urinalysis</span>
-                  <span>Clinical history</span>
-                </div>
-
-                <p>
-                  Available patient and laboratory parameters are entered
-                  into the screening form.
-                </p>
+              <div className="ai-redesign-tags">
+                <span>Creatinine</span>
+                <span>Hemoglobin</span>
+                <span>Glucose</span>
+                <span>Blood pressure</span>
               </div>
             </article>
 
-            <div className="ai-pipeline-arrow">→</div>
+            <article className="ai-redesign-step">
+              <span className="ai-redesign-number">02</span>
+              <span className="ai-redesign-kicker">PREPARATION</span>
+              <h3>Data processing</h3>
+              <p>
+                The preprocessing pipeline prepares submitted values
+                for the trained model.
+              </p>
 
-            <article className="ai-pipeline-card">
-              <div className="ai-pipeline-icon">02</div>
+              <ul className="ai-redesign-list">
+                <li>Numeric values</li>
+                <li>Categorical values</li>
+                <li>Missing-value handling</li>
+              </ul>
+            </article>
 
-              <div className="ai-pipeline-content">
-                <span>PROCESSING</span>
+            <article className="ai-redesign-step ai-redesign-step-featured">
+              <span className="ai-redesign-number">03</span>
+              <span className="ai-redesign-kicker">MACHINE LEARNING</span>
+              <h3>Random Forest</h3>
+              <p>
+                Multiple decision trees contribute to a combined
+                prediction.
+              </p>
 
-                <h3>Data preparation</h3>
-
-                <div className="ai-processing-visual">
-                  <div>
+              <div className="ai-redesign-forest" aria-label="Illustration of decision trees">
+                {Array.from({ length: 12 }, (_, index) => (
+                  <span key={index} className="ai-redesign-tree">
                     <i />
-                    <span>Numeric values</span>
-                  </div>
-
-                  <div>
                     <i />
-                    <span>Categorical values</span>
-                  </div>
-
-                  <div>
                     <i />
-                    <span>Missing values</span>
-                  </div>
-                </div>
+                  </span>
+                ))}
+              </div>
 
-                <p>
-                  The trained preprocessing pipeline prepares the submitted
-                  values for the machine-learning model.
-                </p>
+              <div className="ai-redesign-model-caption">
+                <strong>Ensemble model</strong>
+                <span>Many trees. One prediction.</span>
               </div>
             </article>
 
-            <div className="ai-pipeline-arrow">→</div>
+            <article className="ai-redesign-step">
+              <span className="ai-redesign-number">04</span>
+              <span className="ai-redesign-kicker">OUTPUT</span>
+              <h3>Screening probabilities</h3>
+              <p>
+                The model returns a predicted class and its class
+                probabilities.
+              </p>
 
-            <article className="ai-pipeline-card ai-pipeline-model">
-              <div className="ai-pipeline-icon">03</div>
-
-              <div className="ai-pipeline-content">
-                <span>MODEL</span>
-
-                <h3>Random Forest</h3>
-
-                <div className="ai-trees">
-                  <div className="ai-tree">Tree 1</div>
-                  <div className="ai-tree">Tree 2</div>
-                  <div className="ai-tree">Tree 3</div>
-                  <div className="ai-tree">Tree 4</div>
-                  <div className="ai-tree">…</div>
-                </div>
-
-                <div className="ai-vote">
-                  <span>400 decision trees</span>
-                  <strong>→</strong>
-                  <span>ensemble prediction</span>
-                </div>
-
-                <p>
-                  Multiple decision trees evaluate the prepared laboratory
-                  pattern and contribute to the final ensemble prediction.
-                </p>
-              </div>
-            </article>
-
-            <div className="ai-pipeline-arrow">→</div>
-
-            <article className="ai-pipeline-card ai-pipeline-output">
-              <div className="ai-pipeline-icon">04</div>
-
-              <div className="ai-pipeline-content">
-                <span>OUTPUT</span>
-
-                <h3>Screening probabilities</h3>
-
-                <div className="ai-demo-probability">
-                  <div>
-                    <span>CKD</span>
-                    <strong>Model output</strong>
-                  </div>
-
-                  <div className="ai-demo-bar">
-                    <i />
-                  </div>
-
-                  <div className="ai-demo-labels">
-                    <span>Class probabilities</span>
-                    <span>CKD / NOT CKD</span>
-                  </div>
-                </div>
-
-                <p>
-                  The model returns a predicted class together with its
-                  probability distribution.
-                </p>
+              <div className="ai-redesign-output-tags">
+                <span>CKD</span>
+                <span>NOT CKD</span>
               </div>
             </article>
           </div>
 
-          {/* =====================================================
-              INTERACTIVE RANDOM FOREST
-              ===================================================== */}
-
-          <div className="ai-forest-interactive">
-            <div className="ai-forest-heading">
+          <section className="ai-redesign-live">
+            <div className="ai-redesign-live-heading">
               <div>
-                <span className="ai-section-label">
-                  INTERACTIVE MODEL VIEW
-                </span>
-
-                <h3>How 400 decision trees work together</h3>
+                <span className="ai-section-label">MODEL OUTPUT</span>
+                <h3>Screening result overview</h3>
               </div>
 
-              <p>
-                The Random Forest combines the outputs of hundreds of
-                decision trees to produce a single classification and
-                probability estimate.
-              </p>
+              <span
+                className={`ai-redesign-status ${
+                  result ? "has-result" : ""
+                }`}
+              >
+                <i />
+                {result ? "Result available" : "Waiting for input"}
+              </span>
             </div>
 
-            <div className="ai-forest-stage">
-              <div className="ai-forest-input">
-                <span>LABORATORY DATA</span>
+            <div className="ai-redesign-live-grid">
+              <div className="ai-redesign-live-intro">
+                <span className="ai-redesign-live-icon">AI</span>
 
-                <strong>24 features</strong>
+                <h4>
+                  {result
+                    ? `${isPositive ? "CKD" : "NOT CKD"} classification`
+                    : "Your result will appear here"}
+                </h4>
 
-                <small>
-                  Blood tests, urinalysis and clinical variables
-                </small>
-
-                <div className="ai-forest-input-tags">
-                  <span>14 numeric</span>
-                  <span>10 categorical</span>
-                </div>
+                <p>
+                  {result
+                    ? "These probabilities represent the trained model's output, not a confirmed diagnosis."
+                    : "Submit laboratory data using the form below to display the model's actual output."}
+                </p>
               </div>
 
-              <div className="ai-forest-connector">→</div>
-
-              <div className="ai-forest-center">
-                <div className="ai-forest-model-card">
-                  <div className="ai-forest-model-top">
-                    <span>ENSEMBLE MODEL</span>
-
-                    <strong>Random Forest</strong>
+              <div className="ai-redesign-probabilities">
+                <div className="ai-redesign-probability">
+                  <div className="ai-redesign-probability-label">
+                    <span>CKD probability</span>
+                    <strong>
+                      {result ? `${ckdProbability}%` : "—"}
+                    </strong>
                   </div>
 
-                  <div className="ai-forest-tree-cloud">
-                    {Array.from({ length: 32 }, (_, index) => (
-                      <span
-                        key={index}
-                        className={`ai-mini-tree ${
-                          result ? "active" : ""
-                        }`}
-                        style={{
-                          animationDelay: `${index * 35}ms`,
-                        }}
-                      >
-                        <i />
-                        <i />
-                        <i />
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="ai-forest-tree-count">
-                    <strong>400</strong>
-                    <span>decision trees</span>
-                  </div>
-
-                  <div className="ai-forest-model-specs">
-                    <span>Max depth 12</span>
-                    <span>Balanced classes</span>
-                    <span>Min samples 2</span>
+                  <div className="ai-redesign-track">
+                    <span
+                      style={{
+                        width: `${result ? ckdProbability : 0}%`,
+                      }}
+                    />
                   </div>
                 </div>
 
-                <div className="ai-forest-vote">
-                  <span>ENSEMBLE PREDICTION</span>
+                <div className="ai-redesign-probability">
+                  <div className="ai-redesign-probability-label">
+                    <span>NOT CKD probability</span>
+                    <strong>
+                      {result ? `${notCkdProbability}%` : "—"}
+                    </strong>
+                  </div>
 
-                  <strong>
-                    {result
-                      ? `${isPositive ? "CKD" : "NOT CKD"} classification`
-                      : "Awaiting laboratory data"}
-                  </strong>
-
-                  <small>
-                    Individual trees contribute to the collective model
-                    decision.
-                  </small>
+                  <div className="ai-redesign-track ai-redesign-track-secondary">
+                    <span
+                      style={{
+                        width: `${result ? notCkdProbability : 0}%`,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-
-              <div className="ai-forest-connector">→</div>
-
-              <div className="ai-forest-output">
-                <span>MODEL OUTPUT</span>
-
-                {result ? (
-                  <>
-                    <div className="ai-forest-result">
-                      <strong>
-                        {isPositive ? "CKD" : "NOT CKD"}
-                      </strong>
-
-                      <span>Model-indicated screening</span>
-                    </div>
-
-                    <div className="ai-forest-bars">
-                      <div>
-                        <div className="ai-bar-label">
-                          <span>CKD</span>
-                          <strong>{ckdProbability}%</strong>
-                        </div>
-
-                        <div className="ai-bar">
-                          <i
-                            style={{
-                              width: `${ckdProbability}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="ai-bar-label">
-                          <span>NOT CKD</span>
-                          <strong>{notCkdProbability}%</strong>
-                        </div>
-
-                        <div className="ai-bar">
-                          <i
-                            style={{
-                              width: `${notCkdProbability}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="ai-forest-empty">
-                    <strong>Awaiting result</strong>
-
-                    <span>
-                      Submit laboratory data to display the actual model
-                      probabilities.
-                    </span>
-                  </div>
-                )}
-              </div>
             </div>
 
-            <div className="ai-forest-disclaimer">
-              <span>i</span>
-
+            <div className="ai-redesign-model-note">
+              <span aria-hidden="true">i</span>
               <p>
-                <strong>Model explanation:</strong> the visualization
-                represents the 400-tree Random Forest ensemble. The
-                individual tree icons are a visual representation of the
-                ensemble, while the probability bars show the actual output
-                returned by the trained model.
+                <strong>Model explanation:</strong> the tree illustration
+                is conceptual. The probability bars display the returned
+                model output when a screening result is available.
               </p>
             </div>
-          </div>
+          </section>
 
-          {/* =====================================================
-              REFERENCE INTERVALS
-              ===================================================== */}
-
-          <div className="ai-reference-section">
-            <div className="ai-reference-heading">
-              <div>
-                <span className="ai-section-label">
-                  REFERENCE INFORMATION
-                </span>
-
-                <h3>Reference intervals & expected values</h3>
-              </div>
-
-              <p>
-                The 24 model features come from laboratory measurements,
-                urinalysis findings, and clinical information. Reference
-                values provide context for the measurements but do not
-                determine the model prediction by themselves.
-              </p>
-            </div>
-
-            <div className="ai-reference-groups">
-              {referenceGroups.map((group) => (
-                <section
-                  className="ai-reference-group"
-                  key={group.title}
-                >
-                  <div className="ai-reference-group-heading">
-                    <h4>{group.title}</h4>
-                    <p>{group.description}</p>
-                  </div>
-
-                  <div className="ai-reference-table">
-                    <div className="ai-reference-row ai-reference-header">
-                      <span>Feature</span>
-                      <span>Description</span>
-                      <span>Type</span>
-                      <span>Reference / expected</span>
-                      <span>Unit</span>
-                    </div>
-
-                    {group.items.map((item) => (
-                      <div
-                        className="ai-reference-row"
-                        key={item.key}
-                      >
-                        <strong>{item.label}</strong>
-
-                        <span>{item.description}</span>
-
-                        <span className="ai-reference-type">
-                          {item.type}
-                        </span>
-
-                        <span className="ai-reference-value">
-                          {item.reference}
-                        </span>
-
-                        <span>{item.unit || "—"}</span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ))}
-            </div>
-
-            <div className="ai-reference-note">
-              <span>i</span>
-
-              <p>
-                <strong>Important:</strong> reference intervals can vary by
-                laboratory, measurement method, age, sex, clinical context,
-                and other factors. Always use the reference range printed
-                on the patient's laboratory report when interpreting an
-                actual result.
-              </p>
-            </div>
-          </div>
-
-          {/* DISCLAIMER */}
-
-          <div className="ai-explainer-note">
-            <span>i</span>
-
+          <div className="ai-redesign-disclaimer">
+            <span aria-hidden="true">!</span>
             <p>
-              <strong>Important:</strong> the model produces a screening
-              indication. It does not independently diagnose chronic kidney
-              disease or replace professional clinical evaluation.
+              <strong>Screening support, not diagnosis.</strong> This
+              tool does not replace professional clinical evaluation
+              or a healthcare professional's interpretation of
+              laboratory results.
             </p>
           </div>
         </div>
       </section>
 
-      {/* =====================================================
-          INPUT FORM
-          ===================================================== */}
-
+      {/* INPUT FORM */}
       <section className="lab-ai-form-section">
         <div className="lab-ai-container">
           <div className="lab-ai-section-heading">
@@ -1141,10 +807,7 @@ export default function LabAI() {
         </div>
       </section>
 
-      {/* =====================================================
-          RESULT
-          ===================================================== */}
-
+      {/* RESULT */}
       {result && (
         <section className="lab-ai-result-section">
           <div className="lab-ai-container">
@@ -1217,10 +880,7 @@ export default function LabAI() {
         </section>
       )}
 
-      {/* =====================================================
-          TECHNICAL OVERVIEW
-          ===================================================== */}
-
+      {/* TECHNICAL OVERVIEW */}
       <section className="lab-ai-technical">
         <div className="lab-ai-container">
           <div className="lab-ai-section-heading">
@@ -1234,7 +894,6 @@ export default function LabAI() {
           <div className="lab-ai-technical-grid">
             <article>
               <span>01</span>
-
               <h3>Frontend</h3>
 
               <p>
@@ -1245,7 +904,6 @@ export default function LabAI() {
 
             <article>
               <span>02</span>
-
               <h3>API</h3>
 
               <p>
@@ -1256,7 +914,6 @@ export default function LabAI() {
 
             <article>
               <span>03</span>
-
               <h3>Machine learning</h3>
 
               <p>
@@ -1267,7 +924,6 @@ export default function LabAI() {
 
             <article>
               <span>04</span>
-
               <h3>Clinical context</h3>
 
               <p>
