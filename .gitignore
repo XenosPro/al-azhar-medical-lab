@@ -28,3 +28,12 @@ ai-service/model.joblib
 ai-service/.venv/
 
 __pycache__/
+
+# Environment secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python virtual environments
+**/.venv/
+**/venv/
