@@ -1,4 +1,5 @@
-﻿import BookAppointment from './pages/BookAppointment'
+﻿
+import BookAppointment from './pages/BookAppointment'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -8,6 +9,7 @@ import './App.css'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminRoute from './pages/admin/AdminRoute'
 import HeroSlideshow from './components/HeroSlideshow'
+import Chatbot from './components/Chatbot'
 
 const services = [
   {
@@ -396,6 +398,8 @@ function App() {
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/lab-ai/*" element={<LabAI />} />
       </Routes>
+
+      <Chatbot />
     </BrowserRouter>
   )
 }
