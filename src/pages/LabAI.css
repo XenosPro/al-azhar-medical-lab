@@ -292,7 +292,7 @@
 }
 
 .lab-result-probability strong {
-  color: #167d91;
+  color: #c21b1b;
 }
 
 .lab-result-bar {
@@ -306,7 +306,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #4d9aaa;
+  background: #a30c0c;
   transition: width 0.5s ease;
 }
 
@@ -761,7 +761,7 @@
 }
 
 .ai-redesign-probability-label strong {
-  color: #183b60;
+  color: #dc2626;
   font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
@@ -777,7 +777,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #367bc5;
+  background: #dc2626;
   transition: width 350ms ease;
 }
 
@@ -1614,7 +1614,7 @@
       rgba(5, 18, 38, 0.96),
       rgba(5, 18, 38, 0.65)
     ),
-    url("/images/lab-ai-hero-bg.png");
+    url('/images/ckd-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
