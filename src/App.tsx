@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import LabAI from './pages/LabAI'
+import LabVision from './pages/LabVision'
 import './App.css'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminRoute from './pages/admin/AdminRoute'
@@ -70,6 +71,7 @@ function Home() {
             <a href="#about">About</a>
             <a href="#process">Process</a>
             <a href="/lab-ai">Lab AI</a>
+            <a href="/lab-vision">LabVision</a>
             <a href="#contact">Contact</a>
           </nav>
 
@@ -397,6 +399,7 @@ function App() {
         />
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/lab-ai/*" element={<LabAI />} />
+        <Route path="/lab-vision" element={<LabVision />} />
       </Routes>
 
       <Chatbot />
