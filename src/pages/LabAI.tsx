@@ -42,6 +42,35 @@ const initialForm: FormState = {
   ane: "",
 };
 
+
+const demoForm: FormState = {
+  age: "23",
+  bp: "80",
+  sg: "1.025",
+  al: "0",
+  su: "0",
+  rbc: "normal",
+  pc: "normal",
+  pcc: "notpresent",
+  ba: "notpresent",
+  bgr: "70",
+  bu: "36",
+  sc: "1.0",
+  sod: "150",
+  pot: "4.6",
+  hemo: "17",
+  pcv: "52",
+  wbcc: "9800",
+  rbcc: "5.0",
+  htn: "no",
+  dm: "no",
+  cad: "no",
+  appet: "good",
+  pe: "no",
+  ane: "no",
+};
+
+
 const numericFields = new Set([
   "age",
   "bp",
@@ -326,7 +355,7 @@ export default function LabAI() {
 
   return (
     <main className="lab-ai-page">
-      ```
+      
  
       
 {/* HERO — PROFESSIONAL MEDICAL AI */}
@@ -472,7 +501,6 @@ export default function LabAI() {
     </div>
   </div>
 </section>
-```
 
 
       
@@ -787,6 +815,21 @@ export default function LabAI() {
               >
                 Reset
               </button>
+
+              
+              <button
+                type="button"
+                className="lab-reset-button"
+                onClick={() => {
+                  setForm({ ...demoForm });
+                  setResult(null);
+                  setError("");
+                }}
+                disabled={loading}
+              >
+                ✦ Load Demo Example
+              </button>
+
 
               <button
                 type="submit"
