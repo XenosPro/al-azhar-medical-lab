@@ -242,6 +242,13 @@ function Dashboard() {
                 <span>✦</span>
                 AI CKD Screening
               </Link>
+              <Link
+                to="/lab-vision"
+                className="dashboard-ai-button"
+              >
+                <span>✦</span>
+                AI LabVision
+              </Link>
             </div>
           </section>
 
