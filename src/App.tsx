@@ -1,6 +1,8 @@
 ﻿
+import { useEffect, useState } from 'react'
+import { supabase } from './lib/supabase'
 import BookAppointment from './pages/BookAppointment'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -52,6 +54,31 @@ const services = [
 ]
 
 function Home() {
+  const [isSignedIn, setIsSignedIn] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (active) {
+        setIsSignedIn(!!session)
+      }
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (active) {
+        setIsSignedIn(!!session)
+      }
+    })
+
+    return () => {
+      active = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
   return (
     <main>
       <nav className="nav">
@@ -76,9 +103,12 @@ function Home() {
           </nav>
 
           <div className="nav-actions">
-            <a href="/login" className="nav-button">
-              Patient Sign In
-            </a>
+            <Link
+              to={isSignedIn ? '/dashboard' : '/login'}
+              className="nav-button"
+            >
+              {isSignedIn ? 'My Dashboard' : 'Patient Sign In'}
+            </Link>
 
             <a
               href="/book-appointment"

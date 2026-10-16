@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import './AdminDashboard.css'
 
@@ -151,12 +153,30 @@ function AdminDashboard() {
           <p>Manage patient appointment requests.</p>
         </div>
 
-        <button
-          className="admin-refresh"
-          onClick={loadAppointments}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            flexWrap: 'wrap',
+          }}
         >
-          Refresh
-        </button>
+          <Link
+            to="/"
+            className="admin-refresh"
+            style={{ textDecoration: 'none' }}
+          >
+            ← Back to Home
+          </Link>
+
+          <button
+            type="button"
+            className="admin-refresh"
+            onClick={loadAppointments}
+          >
+            Refresh
+          </button>
+        </div>
       </header>
 
       {error && (
@@ -318,4 +338,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard
-
